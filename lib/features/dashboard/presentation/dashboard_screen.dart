@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_spacing.dart';
-import '../../../shared/widgets/quick_action_sheet.dart';
+import '../../reminders/presentation/create_reminder_sheet.dart';
 import 'widgets/greeting_header.dart';
 import 'widgets/next_reminder_card.dart';
 import 'widgets/quick_action_grid.dart';
@@ -33,7 +33,7 @@ class DashboardScreen extends StatelessWidget {
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
               SliverToBoxAdapter(
                 child: QuickActionGrid(
-                  onNewReminder: () => QuickActionSheet.show(context),
+                  onNewReminder: () => CreateReminderSheet.show(context),
                   onNewTask: () => context.go('/tasks'),
                   onCalendar: () => context.go('/calendar'),
                   onFocus: () {

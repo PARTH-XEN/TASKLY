@@ -9,12 +9,14 @@ class NotificationService {
   void Function(String reminderId)? onAlarmNotificationTapped;
 
   NotificationService([FlutterLocalNotificationsPlugin? plugin])
-      : _notificationsPlugin = plugin ?? FlutterLocalNotificationsPlugin();
+    : _notificationsPlugin = plugin ?? FlutterLocalNotificationsPlugin();
 
   FlutterLocalNotificationsPlugin get plugin => _notificationsPlugin;
 
   Future<void> initialize() async {
-    const androidInitSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidInitSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const initSettings = InitializationSettings(android: androidInitSettings);
 
     await _notificationsPlugin.initialize(
@@ -31,7 +33,8 @@ class NotificationService {
     const alarmChannel = AndroidNotificationChannel(
       alarmChannelId,
       'TASKLY Spoken Alarms',
-      description: 'Full-screen high-priority alarms with spoken task reminders',
+      description:
+          'Full-screen high-priority alarms with spoken task reminders',
       importance: Importance.max,
       playSound: true,
       enableVibration: true,
@@ -47,8 +50,10 @@ class NotificationService {
       playSound: true,
     );
 
-    final androidImpl = _notificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidImpl = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
 
     if (androidImpl != null) {
       await androidImpl.createNotificationChannel(alarmChannel);

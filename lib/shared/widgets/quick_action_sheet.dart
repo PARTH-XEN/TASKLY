@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../features/reminders/presentation/create_reminder_sheet.dart';
 
 /// Modal bottom sheet presenting quick creation actions.
 class QuickActionSheet extends StatelessWidget {
@@ -80,11 +81,7 @@ class QuickActionSheet extends StatelessWidget {
             badge: 'USP',
             onTap: () {
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Spoken Reminder creation ready for Phase 2'),
-                ),
-              );
+              CreateReminderSheet.show(context);
             },
           ),
           const SizedBox(height: AppSpacing.sm),

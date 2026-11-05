@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 
@@ -62,7 +63,9 @@ class VoicePersonalitySelector extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isSelected
                     ? color.withValues(alpha: isDark ? 0.2 : 0.1)
-                    : (isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated),
+                    : (isDark
+                          ? AppColors.darkSurfaceElevated
+                          : AppColors.lightSurfaceElevated),
                 borderRadius: AppRadius.roundedMd,
                 border: Border.all(
                   color: isSelected
@@ -94,10 +97,7 @@ class VoicePersonalitySelector extends StatelessWidget {
                             color: isSelected ? color : null,
                           ),
                         ),
-                        Text(
-                          trait,
-                          style: theme.textTheme.bodySmall,
-                        ),
+                        Text(trait, style: theme.textTheme.bodySmall),
                       ],
                     ),
                   ),

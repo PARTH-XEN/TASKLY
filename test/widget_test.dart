@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:taskly/app.dart';
+import 'package:taskly/core/database/app_database.dart';
+import 'package:taskly/features/reminders/data/reminders_repository.dart';
 
 void main() {
   testWidgets('TasklyApp initializes and displays Home dashboard', (WidgetTester tester) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: TasklyApp(),
+      ProviderScope(
+        overrides: [
+          upcomingRemindersStreamProvider.overrideWith((ref) => Stream<List<Reminder>>.value([])),
+        ],
+        child: const TasklyApp(),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
     // Verify root dashboard loads
     expect(find.text('Offline Ready'), findsOneWidget);

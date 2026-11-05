@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../services/alarm_service.dart';
@@ -29,22 +30,25 @@ class RemindersRepository {
   RemindersRepository(this._db, this._alarmService);
 
   Stream<List<Reminder>> watchAllReminders() {
-    return (_db.select(_db.reminders)
-          ..orderBy([(tbl) => OrderingTerm.asc(tbl.scheduledAt)]))
-        .watch();
+    return (_db.select(
+      _db.reminders,
+    )..orderBy([(tbl) => OrderingTerm.asc(tbl.scheduledAt)])).watch();
   }
 
   Stream<List<Reminder>> watchUpcomingReminders() {
     return (_db.select(_db.reminders)
           ..where((tbl) => tbl.isEnabled.equals(true))
-          ..where((tbl) => tbl.scheduledAt.isBiggerThan(Variable(DateTime.now())))
+          ..where(
+            (tbl) => tbl.scheduledAt.isBiggerThan(Variable(DateTime.now())),
+          )
           ..orderBy([(tbl) => OrderingTerm.asc(tbl.scheduledAt)]))
         .watch();
   }
 
   Future<Reminder?> getReminderById(String id) {
-    return (_db.select(_db.reminders)..where((tbl) => tbl.id.equals(id)))
-        .getSingleOrNull();
+    return (_db.select(
+      _db.reminders,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
 
   Future<void> createReminder({
@@ -62,7 +66,9 @@ class RemindersRepository {
     bool isEnabled = true,
     bool isSpokenEnabled = true,
   }) async {
-    await _db.into(_db.reminders).insert(
+    await _db
+        .into(_db.reminders)
+        .insert(
           RemindersCompanion.insert(
             id: id,
             title: title,

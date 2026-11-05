@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
 
@@ -14,9 +15,9 @@ class AlarmHistoryRepository {
   AlarmHistoryRepository(this._db);
 
   Stream<List<AlarmHistoryData>> watchHistory() {
-    return (_db.select(_db.alarmHistory)
-          ..orderBy([(tbl) => OrderingTerm.desc(tbl.triggeredAt)]))
-        .watch();
+    return (_db.select(
+      _db.alarmHistory,
+    )..orderBy([(tbl) => OrderingTerm.desc(tbl.triggeredAt)])).watch();
   }
 
   Future<void> logAlarmAction({
@@ -24,10 +25,13 @@ class AlarmHistoryRepository {
     required String reminderId,
     required String title,
     required DateTime triggeredAt,
-    required String actionTaken, // 'completed', 'snoozed', 'stopped', 'missed', 'rescheduled'
+    required String
+    actionTaken, // 'completed', 'snoozed', 'stopped', 'missed', 'rescheduled'
     String? spokenMessage,
   }) async {
-    await _db.into(_db.alarmHistory).insert(
+    await _db
+        .into(_db.alarmHistory)
+        .insert(
           AlarmHistoryCompanion.insert(
             id: id,
             reminderId: reminderId,

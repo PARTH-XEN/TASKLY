@@ -1,8 +1,7 @@
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+
 import 'notification_service.dart';
 
 /// Service responsible for exact Android alarm scheduling and cancellation.
@@ -10,15 +9,13 @@ class AlarmService {
   final FlutterLocalNotificationsPlugin _notificationsPlugin;
 
   AlarmService([FlutterLocalNotificationsPlugin? plugin])
-      : _notificationsPlugin = plugin ?? FlutterLocalNotificationsPlugin() {
+    : _notificationsPlugin = plugin ?? FlutterLocalNotificationsPlugin() {
     tz.initializeTimeZones();
   }
 
   /// Hashes a UUID string into a positive 31-bit integer for Android PendingIntents.
   static int notificationIdFromUuid(String uuid) {
-    final bytes = md5.convert(utf8.encode(uuid)).bytes;
-    final intValue = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
-    return intValue & 0x7FFFFFFF; // Ensure positive 31-bit int
+    return uuid.hashCode.abs() & 0x7FFFFFFF;
   }
 
   /// Computes target DateTime from a relative duration in minutes.
@@ -55,7 +52,10 @@ class AlarmService {
     }
 
     final notificationId = notificationIdFromUuid(id);
-    final spokenText = generateSpokenMessage(title: title, customMessage: customSpokenMessage);
+    final spokenText = generateSpokenMessage(
+      title: title,
+      customMessage: customSpokenMessage,
+    );
 
     final androidDetails = AndroidNotificationDetails(
       NotificationService.alarmChannelId,
@@ -67,8 +67,16 @@ class AlarmService {
       category: AndroidNotificationCategory.alarm,
       audioAttributesUsage: AudioAttributesUsage.alarm,
       actions: const [
-        AndroidNotificationAction('stop_action', 'Stop', showsUserInterface: true),
-        AndroidNotificationAction('snooze_action', 'Snooze (10m)', showsUserInterface: false),
+        AndroidNotificationAction(
+          'stop_action',
+          'Stop',
+          showsUserInterface: true,
+        ),
+        AndroidNotificationAction(
+          'snooze_action',
+          'Snooze (10m)',
+          showsUserInterface: false,
+        ),
       ],
       styleInformation: BigTextStyleInformation(
         '"$spokenText"\nVoice: ${voicePersonality.toUpperCase()}',

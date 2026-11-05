@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/alarms/presentation/alarm_history_screen.dart';
+import '../../features/alarms/presentation/alarm_screen.dart';
 import '../../features/calendar/presentation/calendar_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
@@ -70,6 +72,31 @@ final appRouter = GoRouter(
           ],
         ),
       ],
+    ),
+    // Dedicated Full-Screen Alarm Interface
+    GoRoute(
+      path: '/alarm',
+      name: 'alarm',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>? ?? {};
+        return AlarmScreen(
+          reminderId: extra['reminderId'] as String? ?? 'default_reminder',
+          title: extra['title'] as String? ?? 'Scheduled Reminder',
+          scheduledTimeText: extra['scheduledTimeText'] as String? ?? 'Now',
+          voicePersonality: extra['voicePersonality'] as String? ?? 'nova',
+          spokenMessage:
+              extra['spokenMessage'] as String? ??
+              "Hey! It's time for your task. Let's get started!",
+        );
+      },
+    ),
+    // Alarm Trigger & Snooze History Log
+    GoRoute(
+      path: '/alarm-history',
+      name: 'alarm_history',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const AlarmHistoryScreen(),
     ),
   ],
 );

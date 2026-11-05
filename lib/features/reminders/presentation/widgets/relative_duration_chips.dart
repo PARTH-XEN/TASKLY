@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 
@@ -44,15 +45,21 @@ class RelativeDurationChips extends StatelessWidget {
                   onSelected(minutes);
                 }
               },
-              selectedColor: isDark ? AppColors.indigoLight : AppColors.indigoDark,
+              selectedColor: isDark
+                  ? AppColors.indigoLight
+                  : AppColors.indigoDark,
               labelStyle: TextStyle(
                 color: isSelected
                     ? (isDark ? AppColors.darkBackground : Colors.white)
-                    : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                    : (isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 fontSize: 13,
               ),
-              backgroundColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+              backgroundColor: isDark
+                  ? AppColors.darkSurfaceElevated
+                  : AppColors.lightSurfaceElevated,
               shape: RoundedRectangleBorder(
                 borderRadius: AppRadius.roundedFull,
                 side: BorderSide(

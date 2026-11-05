@@ -5,12 +5,14 @@ class PermissionService {
   final FlutterLocalNotificationsPlugin _notificationsPlugin;
 
   PermissionService([FlutterLocalNotificationsPlugin? plugin])
-      : _notificationsPlugin = plugin ?? FlutterLocalNotificationsPlugin();
+    : _notificationsPlugin = plugin ?? FlutterLocalNotificationsPlugin();
 
   /// Requests notification permission on Android 13+ (POST_NOTIFICATIONS)
   Future<bool> requestNotificationPermission() async {
-    final androidImpl = _notificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidImpl = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
 
     if (androidImpl == null) return false;
     final granted = await androidImpl.requestNotificationsPermission();
@@ -19,8 +21,10 @@ class PermissionService {
 
   /// Requests exact alarm scheduling permission on Android 12+ (SCHEDULE_EXACT_ALARM)
   Future<bool> requestExactAlarmPermission() async {
-    final androidImpl = _notificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidImpl = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
 
     if (androidImpl == null) return false;
     final granted = await androidImpl.requestExactAlarmsPermission();
@@ -29,8 +33,10 @@ class PermissionService {
 
   /// Checks whether exact alarms can currently be scheduled
   Future<bool> canScheduleExactAlarms() async {
-    final androidImpl = _notificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidImpl = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
 
     if (androidImpl == null) return false;
     final canSchedule = await androidImpl.canScheduleExactNotifications();

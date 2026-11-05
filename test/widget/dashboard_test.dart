@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:taskly/core/theme/app_theme.dart';
 import 'package:taskly/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:taskly/features/dashboard/presentation/widgets/next_reminder_card.dart';
 import 'package:taskly/features/dashboard/presentation/widgets/today_summary_card.dart';
+import 'package:taskly/features/reminders/data/reminders_repository.dart';
 
 void main() {
-  testWidgets('Dashboard renders greeting, next reminder USP, and summary', (
-    WidgetTester tester,
-  ) async {
+  testWidgets('Dashboard renders greeting, next reminder USP, and summary', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(theme: AppTheme.darkTheme, home: const DashboardScreen()),
+      ProviderScope(
+        overrides: [
+          upcomingRemindersStreamProvider.overrideWith((ref) => Stream.value([])),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.darkTheme,
+          home: const DashboardScreen(),
+        ),
+      ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
     // Verify Offline Ready badge in greeting
     expect(find.text('Offline Ready'), findsOneWidget);
@@ -21,10 +30,7 @@ void main() {
     final reminderCardFinder = find.byType(NextReminderCard);
     expect(reminderCardFinder, findsOneWidget);
     expect(find.text('NEXT SPOKEN REMINDER'), findsOneWidget);
-    expect(
-      find.descendant(of: reminderCardFinder, matching: find.text('Nova')),
-      findsOneWidget,
-    );
+    expect(find.descendant(of: reminderCardFinder, matching: find.text('Nova')), findsOneWidget);
     expect(find.text('Study Flutter Architecture'), findsWidgets);
 
     // Verify Today Summary Card

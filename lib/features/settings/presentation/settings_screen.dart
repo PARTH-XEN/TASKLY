@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:go_router/go_router.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../services/permission_service.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -41,18 +44,45 @@ class SettingsScreen extends StatelessWidget {
           // Alarm & Permissions Section
           _SettingsSectionHeader(title: 'Alarm & Notification Reliability'),
           _SettingsTile(
+            title: 'Alarm History & Logs',
+            subtitle: 'View triggered, snoozed, and completed reminders',
+            icon: Icons.history_rounded,
+            iconColor: AppColors.indigoLight,
+            onTap: () => context.push('/alarm-history'),
+          ),
+          _SettingsTile(
             title: 'Android Exact Alarm Permission',
             subtitle: 'Exact timing requires SCHEDULE_EXACT_ALARM',
             icon: Icons.alarm_rounded,
             iconColor: AppColors.warningLight,
-            onTap: () {},
+            onTap: () async {
+              final granted = await PermissionService()
+                  .requestExactAlarmPermission();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      granted ? 'Exact alarm permission granted!' : 'Exact alarm permission requested. Please enable in Android Settings.',
+                    ),
+                  ),
+                );
+              }
+            },
           ),
           _SettingsTile(
             title: 'Battery Optimization Whitelist',
             subtitle: 'Ensures background reminders wake device',
             icon: Icons.battery_charging_full_rounded,
             iconColor: AppColors.successLight,
-            onTap: () {},
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Please disable Battery Optimization for TASKLY in Android Settings for 100% reliable alarms.',
+                  ),
+                ),
+              );
+            },
           ),
           const SizedBox(height: AppSpacing.lg),
 

@@ -47,78 +47,94 @@ void main() {
   });
 
   group('RemindersRepository & Alarm Sync Tests', () {
-    test('createReminder saves to Drift and schedules with AlarmService', () async {
-      final id = uuid.v4();
-      final scheduledAt = DateTime.now().add(const Duration(hours: 2));
+    test(
+      'createReminder saves to Drift and schedules with AlarmService',
+      () async {
+        final id = uuid.v4();
+        final scheduledAt = DateTime.now().add(const Duration(hours: 2));
 
-      await remindersRepository.createReminder(
-        id: id,
-        title: 'Study Flutter',
-        scheduledAt: scheduledAt,
-        voicePersonality: 'nova',
-        customSpokenMessage: "Hey! It's time to study Flutter. Let's get started!",
-      );
+        await remindersRepository.createReminder(
+          id: id,
+          title: 'Study Flutter',
+          scheduledAt: scheduledAt,
+          voicePersonality: 'nova',
+          customSpokenMessage:
+              "Hey! It's time to study Flutter. Let's get started!",
+        );
 
-      final reminder = await remindersRepository.getReminderById(id);
-      expect(reminder, isNotNull);
-      expect(reminder!.title, equals('Study Flutter'));
-      expect(fakeAlarmService.scheduledIds, contains(id));
-    });
+        final reminder = await remindersRepository.getReminderById(id);
+        expect(reminder, isNotNull);
+        expect(reminder!.title, equals('Study Flutter'));
+        expect(fakeAlarmService.scheduledIds, contains(id));
+      },
+    );
 
-    test('deleteReminder removes from Drift and cancels alarm in AlarmService', () async {
-      final id = uuid.v4();
-      final scheduledAt = DateTime.now().add(const Duration(hours: 1));
+    test(
+      'deleteReminder removes from Drift and cancels alarm in AlarmService',
+      () async {
+        final id = uuid.v4();
+        final scheduledAt = DateTime.now().add(const Duration(hours: 1));
 
-      await remindersRepository.createReminder(
-        id: id,
-        title: 'Call Doctor',
-        scheduledAt: scheduledAt,
-      );
+        await remindersRepository.createReminder(
+          id: id,
+          title: 'Call Doctor',
+          scheduledAt: scheduledAt,
+        );
 
-      await remindersRepository.deleteReminder(id);
+        await remindersRepository.deleteReminder(id);
 
-      final reminder = await remindersRepository.getReminderById(id);
-      expect(reminder, isNull);
-      expect(fakeAlarmService.cancelledIds, contains(id));
-    });
+        final reminder = await remindersRepository.getReminderById(id);
+        expect(reminder, isNull);
+        expect(fakeAlarmService.cancelledIds, contains(id));
+      },
+    );
 
-    test('toggleReminder cancels alarm when disabled, reschedules when enabled', () async {
-      final id = uuid.v4();
-      final scheduledAt = DateTime.now().add(const Duration(hours: 3));
+    test(
+      'toggleReminder cancels alarm when disabled, reschedules when enabled',
+      () async {
+        final id = uuid.v4();
+        final scheduledAt = DateTime.now().add(const Duration(hours: 3));
 
-      await remindersRepository.createReminder(
-        id: id,
-        title: 'Gym Workout',
-        scheduledAt: scheduledAt,
-      );
+        await remindersRepository.createReminder(
+          id: id,
+          title: 'Gym Workout',
+          scheduledAt: scheduledAt,
+        );
 
-      // Disable
-      await remindersRepository.toggleReminder(id, false);
-      expect(fakeAlarmService.cancelledIds, contains(id));
+        // Disable
+        await remindersRepository.toggleReminder(id, false);
+        expect(fakeAlarmService.cancelledIds, contains(id));
 
-      // Re-enable
-      await remindersRepository.toggleReminder(id, true);
-      expect(fakeAlarmService.scheduledIds.where((i) => i == id).length, equals(2));
-    });
+        // Re-enable
+        await remindersRepository.toggleReminder(id, true);
+        expect(
+          fakeAlarmService.scheduledIds.where((i) => i == id).length,
+          equals(2),
+        );
+      },
+    );
 
-    test('AlarmHistoryRepository logs and retrieves triggered alarms', () async {
-      final historyId = uuid.v4();
-      final reminderId = uuid.v4();
-      final triggerTime = DateTime.now();
+    test(
+      'AlarmHistoryRepository logs and retrieves triggered alarms',
+      () async {
+        final historyId = uuid.v4();
+        final reminderId = uuid.v4();
+        final triggerTime = DateTime.now();
 
-      await historyRepository.logAlarmAction(
-        id: historyId,
-        reminderId: reminderId,
-        title: 'Study Flutter',
-        triggeredAt: triggerTime,
-        actionTaken: 'completed',
-        spokenMessage: "Hey! It's time to study Flutter.",
-      );
+        await historyRepository.logAlarmAction(
+          id: historyId,
+          reminderId: reminderId,
+          title: 'Study Flutter',
+          triggeredAt: triggerTime,
+          actionTaken: 'completed',
+          spokenMessage: "Hey! It's time to study Flutter.",
+        );
 
-      final historyList = await historyRepository.watchHistory().first;
-      expect(historyList.length, equals(1));
-      expect(historyList.first.actionTaken, equals('completed'));
-      expect(historyList.first.title, equals('Study Flutter'));
-    });
+        final historyList = await historyRepository.watchHistory().first;
+        expect(historyList.length, equals(1));
+        expect(historyList.first.actionTaken, equals('completed'));
+        expect(historyList.first.title, equals('Study Flutter'));
+      },
+    );
   });
 }

@@ -26,7 +26,8 @@ class CreateReminderSheet extends ConsumerStatefulWidget {
   }
 
   @override
-  ConsumerState<CreateReminderSheet> createState() => _CreateReminderSheetState();
+  ConsumerState<CreateReminderSheet> createState() =>
+      _CreateReminderSheetState();
 }
 
 class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
@@ -97,7 +98,9 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
   }
 
   String get _spokenPreview {
-    final title = _titleController.text.trim().isEmpty ? 'your task' : _titleController.text.trim();
+    final title = _titleController.text.trim().isEmpty
+        ? 'your task'
+        : _titleController.text.trim();
     return AlarmService.generateSpokenMessage(
       title: title,
       customMessage: _customMessageController.text,
@@ -139,7 +142,9 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Spoken reminder scheduled for ${DateFormat('h:mm a').format(_scheduledAt)}'),
+          content: Text(
+            'Spoken reminder scheduled for ${DateFormat('h:mm a').format(_scheduledAt)}',
+          ),
           backgroundColor: AppColors.successDark,
         ),
       );
@@ -153,7 +158,9 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
 
     return Material(
       color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xxl)),
+      borderRadius: const BorderRadius.vertical(
+        top: Radius.circular(AppRadius.xxl),
+      ),
       clipBehavior: Clip.antiAlias,
       child: Container(
         height: MediaQuery.sizeOf(context).height * 0.88,
@@ -167,7 +174,11 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
           children: [
             // Drag handle & Header
             Padding(
-              padding: const EdgeInsets.only(top: AppSpacing.md, left: AppSpacing.lg, right: AppSpacing.lg),
+              padding: const EdgeInsets.only(
+                top: AppSpacing.md,
+                left: AppSpacing.lg,
+                right: AppSpacing.lg,
+              ),
               child: Column(
                 children: [
                   Center(
@@ -175,7 +186,9 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkTextTertiary : AppColors.lightBorder,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.lightBorder,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -186,7 +199,9 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
                     children: [
                       Text(
                         'New Spoken Reminder',
-                        style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.close, size: 20),
@@ -251,20 +266,32 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       child: Row(
                         children: [
-                          const Icon(Icons.calendar_today_rounded, size: 16, color: AppColors.indigoLight),
+                          const Icon(
+                            Icons.calendar_today_rounded,
+                            size: 16,
+                            color: AppColors.indigoLight,
+                          ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               'Scheduled: ${DateFormat('EEE, MMM d • h:mm a').format(_scheduledAt)}',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           const SizedBox(width: 8),
-                          const Text('Change', style: TextStyle(color: AppColors.indigoLight, fontSize: 12)),
+                          const Text(
+                            'Change',
+                            style: TextStyle(
+                              color: AppColors.indigoLight,
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -291,10 +318,14 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.md),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkSurfaceElevated : Colors.white,
+                      color: isDark
+                          ? AppColors.darkSurfaceElevated
+                          : Colors.white,
                       borderRadius: AppRadius.roundedMd,
                       border: Border.all(
-                        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
                       ),
                     ),
                     child: Column(
@@ -302,7 +333,11 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.volume_up_rounded, size: 18, color: AppColors.indigoLight),
+                            const Icon(
+                              Icons.volume_up_rounded,
+                              size: 18,
+                              color: AppColors.indigoLight,
+                            ),
                             const SizedBox(width: 6),
                             Text(
                               'SPOKEN TASK PREVIEW',
@@ -360,7 +395,11 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
               decoration: BoxDecoration(
                 color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                 border: Border(
-                  top: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                  top: BorderSide(
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
+                  ),
                 ),
               ),
               child: ElevatedButton.icon(

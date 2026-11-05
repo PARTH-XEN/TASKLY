@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 /// Animated audio waveform visualizer for spoken task reminders.
@@ -81,8 +82,12 @@ class _WaveformPainter extends CustomPainter {
     for (int i = 0; i < barCount; i++) {
       // Create organic pulsating wave frequencies
       final normalizedIndex = i / barCount;
-      final wave1 = math.sin((normalizedIndex * 4 * math.pi) + (animationValue * 2 * math.pi));
-      final wave2 = math.cos((normalizedIndex * 2 * math.pi) - (animationValue * 3 * math.pi));
+      final wave1 = math.sin(
+        (normalizedIndex * 4 * math.pi) + (animationValue * 2 * math.pi),
+      );
+      final wave2 = math.cos(
+        (normalizedIndex * 2 * math.pi) - (animationValue * 3 * math.pi),
+      );
       final combined = ((wave1 + wave2) / 2).abs();
 
       // Ensure minimum height for subtle vibration feel
