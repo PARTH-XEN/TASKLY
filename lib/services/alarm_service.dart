@@ -1,10 +1,14 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import 'notification_service.dart';
 
-/// Service responsible for exact Android alarm scheduling and cancellation.
+/// Service responsible for exact Android alarm scheduling, inexact fallback, and cancellation.
 class AlarmService {
   final FlutterLocalNotificationsPlugin _notificationsPlugin;
 
@@ -38,7 +42,8 @@ class AlarmService {
     return "Hey! It's time to $title. Let's get started!";
   }
 
-  /// Schedules an exact alarm with full-screen notification intent.
+  /// Schedules an exact alarm with full-screen notification intent, automatically
+  /// falling back to inexactAllowWhileIdle if exact alarm permission is restricted.
   Future<bool> scheduleReminder({
     required String id,
     required String title,
@@ -46,8 +51,10 @@ class AlarmService {
     String? customSpokenMessage,
     String voicePersonality = 'nova',
   }) async {
-    // If time is in the past, do not schedule
-    if (scheduledAt.isBefore(DateTime.now())) {
+    // If time is in the past by more than 10 seconds, do not schedule
+    if (scheduledAt.isBefore(
+      DateTime.now().subtract(const Duration(seconds: 10)),
+    )) {
       return false;
     }
 
@@ -66,6 +73,8 @@ class AlarmService {
       fullScreenIntent: true,
       category: AndroidNotificationCategory.alarm,
       audioAttributesUsage: AudioAttributesUsage.alarm,
+      playSound: true,
+      enableVibration: true,
       actions: const [
         AndroidNotificationAction(
           'stop_action',
@@ -86,9 +95,24 @@ class AlarmService {
     );
 
     final notificationDetails = NotificationDetails(android: androidDetails);
-    final tzDateTime = tz.TZDateTime.from(scheduledAt, tz.local);
+
+    // Ensure tzDateTime is localized and not in the past
+    var tzDateTime = tz.TZDateTime.from(scheduledAt, tz.local);
+    final tzNow = tz.TZDateTime.now(tz.local);
+    if (tzDateTime.isBefore(tzNow)) {
+      tzDateTime = tzNow.add(const Duration(seconds: 1));
+    }
+
+    final payload = jsonEncode({
+      'id': id,
+      'title': title,
+      'message': spokenText,
+      'voice': voicePersonality,
+      'time': DateFormat('h:mm a').format(scheduledAt),
+    });
 
     try {
+      // First attempt: Exact alarm with wake-up
       await _notificationsPlugin.zonedSchedule(
         notificationId,
         title,
@@ -98,12 +122,37 @@ class AlarmService {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
-        payload: id,
+        payload: payload,
+      );
+      debugPrint(
+        'TASKLY Alarm scheduled (exactAllowWhileIdle) for $tzDateTime',
       );
       return true;
-    } catch (_) {
-      // Inexact fallback or permission restricted
-      return false;
+    } catch (exactError) {
+      debugPrint(
+        'TASKLY Exact alarm restricted ($exactError). Falling back to inexactAllowWhileIdle...',
+      );
+      try {
+        // Fallback attempt: Inexact alarm (does not require SCHEDULE_EXACT_ALARM permission)
+        await _notificationsPlugin.zonedSchedule(
+          notificationId,
+          title,
+          spokenText,
+          tzDateTime,
+          notificationDetails,
+          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          payload: payload,
+        );
+        debugPrint(
+          'TASKLY Alarm scheduled (inexactAllowWhileIdle fallback) for $tzDateTime',
+        );
+        return true;
+      } catch (fallbackError) {
+        debugPrint('TASKLY Fatal alarm scheduling failure: $fallbackError');
+        return false;
+      }
     }
   }
 

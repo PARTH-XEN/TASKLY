@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../services/alarm_service.dart';
+import '../../../services/permission_service.dart';
 import '../data/reminders_repository.dart';
 import '../../voice/presentation/voice_settings_screen.dart';
 import 'widgets/relative_duration_chips.dart';
@@ -117,6 +118,22 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
       return;
     }
 
+    // If relative duration was selected, recalculate fresh from current time
+    DateTime targetTime = _scheduledAt;
+    if (_relativeMinutes != null) {
+      targetTime = DateTime.now().add(Duration(minutes: _relativeMinutes!));
+    }
+
+    if (targetTime.isBefore(DateTime.now())) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a future reminder time')),
+      );
+      return;
+    }
+
+    // Ensure notification permission is requested
+    await PermissionService().requestNotificationPermission();
+
     final id = const Uuid().v4();
     final repo = ref.read(remindersRepositoryProvider);
 
@@ -126,7 +143,7 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
       description: _descriptionController.text.trim().isEmpty
           ? null
           : _descriptionController.text.trim(),
-      scheduledAt: _scheduledAt,
+      scheduledAt: targetTime,
       relativeDurationMinutes: _relativeMinutes,
       voicePersonality: _selectedPersonality,
       speechRate: _speechRate,
@@ -144,7 +161,7 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Spoken reminder scheduled for ${DateFormat('h:mm a').format(_scheduledAt)}',
+            'Spoken reminder scheduled for ${DateFormat('h:mm a').format(targetTime)}',
           ),
           backgroundColor: AppColors.successDark,
         ),

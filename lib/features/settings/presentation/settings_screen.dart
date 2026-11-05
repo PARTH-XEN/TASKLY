@@ -299,6 +299,8 @@ class SettingsScreen extends ConsumerWidget {
             icon: Icons.play_circle_fill_rounded,
             iconColor: AppColors.primaryIndigo,
             onTap: () async {
+              await PermissionService().requestNotificationPermission();
+
               final testTime = DateTime.now().add(const Duration(seconds: 5));
               await ref
                   .read(alarmServiceProvider)
@@ -309,16 +311,37 @@ class SettingsScreen extends ConsumerWidget {
                     voicePersonality: 'nova',
                     customSpokenMessage: "Hey! It's time to test TASKLY. Your spoken alarms are working perfectly!",
                   );
+
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text(
-                      '⏰ Test alarm will fire in 5 seconds! Feel free to lock your screen.',
+                      '⏰ Test alarm will fire in 5 seconds! Feel free to lock your screen or wait here.',
                     ),
                     backgroundColor: AppColors.indigoLight,
+                    duration: Duration(seconds: 4),
                   ),
                 );
               }
+
+              // Foreground backup trigger: If user is actively in the app, launch alarm directly after 5s
+              Future.delayed(const Duration(seconds: 5), () {
+                if (context.mounted) {
+                  final uri = GoRouterState.of(context).uri.toString();
+                  if (!uri.contains('/alarm')) {
+                    context.push(
+                      '/alarm',
+                      extra: {
+                        'reminderId': 'test_demo_alarm',
+                        'title': 'TASKLY Voice Alarm Demo',
+                        'scheduledTimeText': 'Just now',
+                        'spokenMessage': "Hey! It's time to test TASKLY. Your spoken alarms are working perfectly!",
+                        'voicePersonality': 'nova',
+                      },
+                    );
+                  }
+                }
+              });
             },
           ),
           const SizedBox(height: AppSpacing.lg),
