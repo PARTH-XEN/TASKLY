@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:taskly/core/theme/app_theme.dart';
+import 'package:taskly/features/calendar/data/calendar_repository.dart';
 import 'package:taskly/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:taskly/features/dashboard/presentation/widgets/next_reminder_card.dart';
 import 'package:taskly/features/dashboard/presentation/widgets/today_summary_card.dart';
+import 'package:taskly/features/productivity/data/focus_repository.dart';
 import 'package:taskly/features/reminders/data/reminders_repository.dart';
+import 'package:taskly/features/tasks/data/tasks_repository.dart';
 
 void main() {
   testWidgets('Dashboard renders greeting, next reminder USP, and summary', (
@@ -16,6 +19,15 @@ void main() {
         overrides: [
           upcomingRemindersStreamProvider.overrideWith(
             (ref) => Stream.value([]),
+          ),
+          eventsForSelectedDateStreamProvider.overrideWith(
+            (ref) => Stream.value([]),
+          ),
+          taskStatsStreamProvider.overrideWith(
+            (ref) => Stream.value(TaskStats.empty()),
+          ),
+          todayFocusMinutesStreamProvider.overrideWith(
+            (ref) => Stream.value(0),
           ),
         ],
         child: MaterialApp(
@@ -43,16 +55,21 @@ void main() {
     // Verify Today Summary Card
     expect(find.byType(TodaySummaryCard), findsOneWidget);
     expect(find.text("Today's Overview"), findsOneWidget);
-    expect(find.text('Pending Tasks'), findsOneWidget);
+    expect(find.text('Pending'), findsOneWidget);
     expect(find.text('Completed'), findsOneWidget);
+    expect(find.text('Focus'), findsWidgets);
 
     // Verify Quick Action Grid items
     expect(find.text('Reminder'), findsOneWidget);
     expect(find.text('Task'), findsOneWidget);
     expect(find.text('Calendar'), findsOneWidget);
-    expect(find.text('Focus'), findsOneWidget);
 
-    // Verify Upcoming Reminders section
+    // Verify Upcoming Reminders section (scroll down if needed)
+    await tester.scrollUntilVisible(
+      find.text('Upcoming Reminders'),
+      200,
+      scrollable: find.byType(Scrollable),
+    );
     expect(find.text('Upcoming Reminders'), findsOneWidget);
   });
 }

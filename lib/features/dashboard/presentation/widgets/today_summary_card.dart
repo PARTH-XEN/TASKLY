@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../productivity/data/focus_repository.dart';
 import '../../../tasks/data/tasks_repository.dart';
 
 class TodaySummaryCard extends ConsumerWidget {
@@ -17,6 +18,9 @@ class TodaySummaryCard extends ConsumerWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final statsAsync = ref.watch(taskStatsStreamProvider);
+    final focusMinutesAsync = ref.watch(todayFocusMinutesStreamProvider);
+    final todayFocusMinutes = focusMinutesAsync.value ?? 0;
+
     final actualPending = pendingTasks ?? statsAsync.value?.pendingCount ?? 0;
     final actualCompleted =
         completedTasks ?? statsAsync.value?.completedCount ?? 0;
@@ -77,8 +81,8 @@ class TodaySummaryCard extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: _StatTile(
-                      label: 'Pending Tasks',
-                      count: actualPending,
+                      label: 'Pending',
+                      valueText: actualPending.toString(),
                       color: AppColors.warningLight,
                       icon: Icons.pending_actions_rounded,
                     ),
@@ -93,9 +97,24 @@ class TodaySummaryCard extends ConsumerWidget {
                   Expanded(
                     child: _StatTile(
                       label: 'Completed',
-                      count: actualCompleted,
+                      valueText: actualCompleted.toString(),
                       color: AppColors.successLight,
                       icon: Icons.task_alt_rounded,
+                    ),
+                  ),
+                  Container(
+                    height: 36,
+                    width: 1,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
+                  ),
+                  Expanded(
+                    child: _StatTile(
+                      label: 'Focus',
+                      valueText: '${todayFocusMinutes}m',
+                      color: AppColors.indigoLight,
+                      icon: Icons.timer_rounded,
                     ),
                   ),
                 ],
@@ -110,13 +129,13 @@ class TodaySummaryCard extends ConsumerWidget {
 
 class _StatTile extends StatelessWidget {
   final String label;
-  final int count;
+  final String valueText;
   final Color color;
   final IconData icon;
 
   const _StatTile({
     required this.label,
-    required this.count,
+    required this.valueText,
     required this.color,
     required this.icon,
   });
@@ -127,21 +146,22 @@ class _StatTile extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          padding: const EdgeInsets.all(AppSpacing.sm),
+          padding: const EdgeInsets.all(AppSpacing.xs + 2),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.15),
             borderRadius: AppRadius.roundedSm,
           ),
-          child: Icon(icon, color: color, size: 20),
+          child: Icon(icon, color: color, size: 18),
         ),
-        const SizedBox(width: AppSpacing.sm),
+        const SizedBox(width: AppSpacing.xs + 2),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              count.toString(),
+              valueText,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -149,6 +169,7 @@ class _StatTile extends StatelessWidget {
             Text(
               label,
               style: theme.textTheme.bodySmall?.copyWith(
+                fontSize: 10,
                 color: isDark
                     ? AppColors.darkTextSecondary
                     : AppColors.lightTextSecondary,

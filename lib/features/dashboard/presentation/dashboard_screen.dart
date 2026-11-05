@@ -8,6 +8,7 @@ import 'widgets/greeting_header.dart';
 import 'widgets/next_reminder_card.dart';
 import 'widgets/quick_action_grid.dart';
 import 'widgets/today_summary_card.dart';
+import 'widgets/upcoming_events_preview.dart';
 import 'widgets/upcoming_reminders_list.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -42,6 +43,8 @@ class DashboardScreen extends StatelessWidget {
               ),
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
               const SliverToBoxAdapter(child: TodaySummaryCard()),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+              const SliverToBoxAdapter(child: UpcomingEventsPreview()),
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
               const SliverToBoxAdapter(child: UpcomingRemindersList()),
               const SliverToBoxAdapter(

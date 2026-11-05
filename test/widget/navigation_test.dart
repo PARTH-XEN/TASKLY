@@ -3,9 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:taskly/core/router/app_router.dart';
 import 'package:taskly/core/theme/app_theme.dart';
+import 'package:taskly/features/calendar/data/calendar_repository.dart';
 import 'package:taskly/features/calendar/presentation/calendar_screen.dart';
+import 'package:taskly/features/productivity/data/focus_repository.dart';
 import 'package:taskly/features/reminders/data/reminders_repository.dart';
+import 'package:taskly/features/tasks/data/tasks_repository.dart';
 import 'package:taskly/features/tasks/presentation/tasks_screen.dart';
+import 'package:taskly/features/wishlist/data/wishlist_repository.dart';
 import 'package:taskly/features/wishlist/presentation/wishlist_screen.dart';
 
 void main() {
@@ -17,6 +21,24 @@ void main() {
         overrides: [
           upcomingRemindersStreamProvider.overrideWith(
             (ref) => Stream.value([]),
+          ),
+          eventsForSelectedDateStreamProvider.overrideWith(
+            (ref) => Stream.value([]),
+          ),
+          allCalendarEventsStreamProvider.overrideWith(
+            (ref) => Stream.value([]),
+          ),
+          taskStatsStreamProvider.overrideWith(
+            (ref) => Stream.value(TaskStats.empty()),
+          ),
+          filteredTasksStreamProvider.overrideWith(
+            (ref) => Stream.value([]),
+          ),
+          filteredWishlistStreamProvider.overrideWith(
+            (ref) => Stream.value([]),
+          ),
+          todayFocusMinutesStreamProvider.overrideWith(
+            (ref) => Stream.value(0),
           ),
         ],
         child: MaterialApp.router(
