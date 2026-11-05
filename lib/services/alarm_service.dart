@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -8,9 +9,11 @@ import 'package:timezone/timezone.dart' as tz;
 
 import 'notification_service.dart';
 
-/// Service responsible for exact Android alarm scheduling, inexact fallback, and cancellation.
+/// Service responsible for native Android alarm scheduling, background speech execution,
+/// inexact fallback, and cancellation.
 class AlarmService {
   final FlutterLocalNotificationsPlugin _notificationsPlugin;
+  static const MethodChannel _platformChannel = MethodChannel('taskly/native');
 
   AlarmService([FlutterLocalNotificationsPlugin? plugin])
     : _notificationsPlugin = plugin ?? FlutterLocalNotificationsPlugin() {
@@ -42,14 +45,15 @@ class AlarmService {
     return "Hey! It's time to $title. Let's get started!";
   }
 
-  /// Schedules an exact alarm with full-screen notification intent, automatically
-  /// falling back to inexactAllowWhileIdle if exact alarm permission is restricted.
+  /// Schedules an exact alarm with background speech and full-screen notification intent.
   Future<bool> scheduleReminder({
     required String id,
     required String title,
     required DateTime scheduledAt,
     String? customSpokenMessage,
     String voicePersonality = 'nova',
+    double speechRate = 1.0,
+    double speechPitch = 1.0,
   }) async {
     // If time is in the past by more than 10 seconds, do not schedule
     if (scheduledAt.isBefore(
@@ -64,6 +68,35 @@ class AlarmService {
       customMessage: customSpokenMessage,
     );
 
+    // 1. Primary engine for Android: Native Background Speech & AlarmManager
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      try {
+        final success = await _platformChannel.invokeMethod<bool>(
+          'scheduleNativeAlarm',
+          {
+            'id': id,
+            'title': title,
+            'spokenMessage': spokenText,
+            'scheduledAtMillis': scheduledAt.millisecondsSinceEpoch,
+            'voicePersonality': voicePersonality,
+            'speechRate': speechRate,
+            'speechPitch': speechPitch,
+            'language': 'en-US',
+            'isEnabled': true,
+          },
+        );
+        if (success == true) {
+          debugPrint('TASKLY Native spoken alarm scheduled for $id');
+          return true;
+        }
+      } catch (nativeError) {
+        debugPrint(
+          'TASKLY Native alarm schedule failed: $nativeError. Falling back to local notifications.',
+        );
+      }
+    }
+
+    // 2. Fallback / Test-environment engine: flutter_local_notifications
     final androidDetails = AndroidNotificationDetails(
       NotificationService.alarmChannelId,
       'TASKLY Spoken Alarms',
@@ -156,10 +189,28 @@ class AlarmService {
     }
   }
 
-  /// Cancels a scheduled reminder by its ID.
+  /// Cancels a scheduled reminder by its ID in both native AlarmManager and notification plugin.
   Future<void> cancelReminder(String id) async {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      try {
+        await _platformChannel.invokeMethod('cancelNativeAlarm', {'id': id});
+      } catch (e) {
+        debugPrint('TASKLY Native cancel error: $e');
+      }
+    }
     final notificationId = notificationIdFromUuid(id);
     await _notificationsPlugin.cancel(notificationId);
+  }
+
+  /// Stops ongoing native background speech if currently active.
+  Future<void> stopNativeSpeech() async {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      try {
+        await _platformChannel.invokeMethod('stopNativeSpeech');
+      } catch (e) {
+        debugPrint('TASKLY Stop native speech error: $e');
+      }
+    }
   }
 
   /// Reschedules an alarm for 10 minutes in the future.
@@ -169,14 +220,33 @@ class AlarmService {
     int snoozeMinutes = 10,
     String? customSpokenMessage,
     String voicePersonality = 'nova',
+    double speechRate = 1.0,
+    double speechPitch = 1.0,
   }) async {
     final snoozeTime = DateTime.now().add(Duration(minutes: snoozeMinutes));
+
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      try {
+        final newMillis = await _platformChannel.invokeMethod<int>(
+          'snoozeNativeAlarm',
+          {'id': id, 'minutes': snoozeMinutes},
+        );
+        if (newMillis != null) {
+          return DateTime.fromMillisecondsSinceEpoch(newMillis);
+        }
+      } catch (e) {
+        debugPrint('TASKLY Native snooze error: $e');
+      }
+    }
+
     await scheduleReminder(
       id: id,
       title: title,
       scheduledAt: snoozeTime,
       customSpokenMessage: customSpokenMessage,
       voicePersonality: voicePersonality,
+      speechRate: speechRate,
+      speechPitch: speechPitch,
     );
     return snoozeTime;
   }

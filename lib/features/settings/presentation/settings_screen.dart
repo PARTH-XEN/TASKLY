@@ -325,26 +325,7 @@ class SettingsScreen extends ConsumerWidget {
                 );
               }
 
-              // Foreground backup trigger: If user is actively in the app, launch alarm directly after 5s
-              Future.delayed(const Duration(seconds: 5), () {
-                if (context.mounted) {
-                  final uri = GoRouterState.of(context).uri.toString();
-                  if (!uri.contains('/alarm')) {
-                    context.push(
-                      '/alarm',
-                      extra: {
-                        'reminderId': 'test_demo_alarm',
-                        'title': 'TASKLY Voice Alarm Demo',
-                        'scheduledTimeText': 'Just now',
-                        'spokenMessage': "Hey! It's time to test TASKLY. Your spoken alarms are working perfectly!",
-                        'voicePersonality': 'nova',
-                      },
-                    );
-                  }
-                }
-              });
-
-              // Foreground backup trigger: If user is actively in the app, launch alarm directly after 5s
+              // Foreground helper: If user stays on this screen, open the alarm visualizer after 5s
               Future.delayed(const Duration(seconds: 5), () {
                 if (context.mounted) {
                   final uri = GoRouterState.of(context).uri.toString();

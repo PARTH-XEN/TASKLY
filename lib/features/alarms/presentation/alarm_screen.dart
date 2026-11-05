@@ -102,6 +102,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   Future<void> _onStop() async {
     HapticFeedback.heavyImpact();
     await _ttsService.stop();
+    await ref.read(alarmServiceProvider).stopNativeSpeech();
     await _logAction('stopped');
     if (mounted) {
       Navigator.of(context).maybePop();
@@ -111,6 +112,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   Future<void> _onSnooze() async {
     HapticFeedback.mediumImpact();
     await _ttsService.stop();
+    await ref.read(alarmServiceProvider).stopNativeSpeech();
     final alarmService = ref.read(alarmServiceProvider);
     await alarmService.snoozeReminder(
       id: widget.reminderId,
@@ -132,6 +134,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   Future<void> _onComplete() async {
     HapticFeedback.mediumImpact();
     await _ttsService.stop();
+    await ref.read(alarmServiceProvider).stopNativeSpeech();
     await _logAction('completed');
 
     final reminderRepo = ref.read(remindersRepositoryProvider);

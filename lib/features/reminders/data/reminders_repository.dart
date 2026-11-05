@@ -93,6 +93,8 @@ class RemindersRepository {
         scheduledAt: scheduledAt,
         customSpokenMessage: customSpokenMessage,
         voicePersonality: voicePersonality,
+        speechRate: speechRate,
+        speechPitch: speechPitch,
       );
     }
   }
@@ -139,6 +141,8 @@ class RemindersRepository {
         scheduledAt: scheduledAt,
         customSpokenMessage: customSpokenMessage,
         voicePersonality: voicePersonality,
+        speechRate: speechRate,
+        speechPitch: speechPitch,
       );
     }
   }
@@ -165,6 +169,8 @@ class RemindersRepository {
           scheduledAt: reminder.scheduledAt,
           customSpokenMessage: reminder.customSpokenMessage,
           voicePersonality: reminder.voicePersonality,
+          speechRate: reminder.speechRate,
+          speechPitch: reminder.speechPitch,
         );
       } else {
         await _alarmService.cancelReminder(id);

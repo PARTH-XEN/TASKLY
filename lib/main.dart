@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
@@ -40,6 +41,26 @@ void _routeToAlarm(String rawPayload) {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Listen to native Android full-screen alarm intents
+  const nativeChannel = MethodChannel('taskly/native');
+  nativeChannel.setMethodCallHandler((call) async {
+    if (call.method == 'onAlarmTriggeredFromNative') {
+      final data = call.arguments as Map<dynamic, dynamic>? ?? {};
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        appRouter.push(
+          '/alarm',
+          extra: {
+            'reminderId': data['reminderId']?.toString() ?? '',
+            'title': data['title']?.toString() ?? 'Task Reminder',
+            'scheduledTimeText': 'Now',
+            'spokenMessage': data['spokenMessage']?.toString() ?? '',
+            'voicePersonality': data['voicePersonality']?.toString() ?? 'nova',
+          },
+        );
+      });
+    }
+  });
 
   // Initialize Android notification channels, timezone, and alarm triggers
   final notificationService = NotificationService();

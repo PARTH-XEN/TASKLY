@@ -15,6 +15,8 @@ class MockAlarmService implements AlarmService {
     required DateTime scheduledAt,
     String? customSpokenMessage,
     String voicePersonality = 'nova',
+    double speechRate = 1.0,
+    double speechPitch = 1.0,
   }) async {
     scheduledAlarms.add(id);
     return true;
