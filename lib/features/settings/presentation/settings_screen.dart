@@ -309,7 +309,8 @@ class SettingsScreen extends ConsumerWidget {
                     title: 'TASKLY Voice Alarm Demo',
                     scheduledAt: testTime,
                     voicePersonality: 'nova',
-                    customSpokenMessage: "Hey! It's time to test TASKLY. Your spoken alarms are working perfectly!",
+                    customSpokenMessage:
+                        "Hey! It's time to test TASKLY. Your spoken alarms are working perfectly!",
                   );
 
               if (context.mounted) {
@@ -336,6 +337,26 @@ class SettingsScreen extends ConsumerWidget {
                         'title': 'TASKLY Voice Alarm Demo',
                         'scheduledTimeText': 'Just now',
                         'spokenMessage': "Hey! It's time to test TASKLY. Your spoken alarms are working perfectly!",
+                        'voicePersonality': 'nova',
+                      },
+                    );
+                  }
+                }
+              });
+
+              // Foreground backup trigger: If user is actively in the app, launch alarm directly after 5s
+              Future.delayed(const Duration(seconds: 5), () {
+                if (context.mounted) {
+                  final uri = GoRouterState.of(context).uri.toString();
+                  if (!uri.contains('/alarm')) {
+                    context.push(
+                      '/alarm',
+                      extra: {
+                        'reminderId': 'test_demo_alarm',
+                        'title': 'TASKLY Voice Alarm Demo',
+                        'scheduledTimeText': 'Just now',
+                        'spokenMessage':
+                            "Hey! It's time to test TASKLY. Your spoken alarms are working perfectly!",
                         'voicePersonality': 'nova',
                       },
                     );
@@ -486,7 +507,16 @@ class SettingsScreen extends ConsumerWidget {
                 context: context,
                 applicationName: 'TASKLY',
                 applicationVersion: '1.0.0+1',
-                applicationLegalese: '100% Free and Open Source Productivity & Smart Spoken Alarms\n\nTagline: "Don\'t just remind me when. Remind me what."',
+                applicationIcon: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    'assets/icons/taskly_logo.png',
+                    width: 52,
+                    height: 52,
+                  ),
+                ),
+                applicationLegalese:
+                    '100% Free and Open Source Productivity & Smart Spoken Alarms\n\nTagline: "Don\'t just remind me when. Remind me what."',
               );
             },
           ),

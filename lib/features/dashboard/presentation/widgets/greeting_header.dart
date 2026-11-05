@@ -34,15 +34,28 @@ class GreetingHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  formattedDate.toUpperCase(),
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    letterSpacing: 1.2,
-                    fontWeight: FontWeight.w700,
-                    color: isDark
-                        ? AppColors.indigoLight
-                        : AppColors.indigoDark,
-                  ),
+                Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.asset(
+                        'assets/icons/taskly_logo.png',
+                        width: 16,
+                        height: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      formattedDate.toUpperCase(),
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w700,
+                        color: isDark
+                            ? AppColors.indigoLight
+                            : AppColors.indigoDark,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(
