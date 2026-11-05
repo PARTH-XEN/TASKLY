@@ -31,7 +31,7 @@ import 'package:url_launcher/url_launcher.dart';
 // CONFIGURATION — Replace YOUR_USERNAME with your GitHub username.
 // ─────────────────────────────────────────────────────────────────────────────
 const String _versionCheckUrl =
-    'https://raw.githubusercontent.com/YOUR_USERNAME/taskly/main/version.json';
+    'https://raw.githubusercontent.com/PARTH-XEN/taskly/main/version.json';
 
 /// The version currently installed on the device.
 /// Must match pubspec.yaml → version field (before the +build number).
@@ -60,11 +60,11 @@ class UpdateInfo {
   });
 
   factory UpdateInfo.fromJson(Map<String, dynamic> json) => UpdateInfo(
-        version: (json['version'] as String?) ?? _currentVersion,
-        build: (json['build'] as int?) ?? _currentBuild,
-        downloadUrl: (json['downloadUrl'] as String?) ?? '',
-        releaseNotes: (json['releaseNotes'] as String?) ?? '',
-      );
+    version: (json['version'] as String?) ?? _currentVersion,
+    build: (json['build'] as int?) ?? _currentBuild,
+    downloadUrl: (json['downloadUrl'] as String?) ?? '',
+    releaseNotes: (json['releaseNotes'] as String?) ?? '',
+  );
 
   @override
   String toString() => 'UpdateInfo(version: $version, build: $build)';
@@ -150,10 +150,7 @@ class UpdateService {
   }
 
   List<int> _parseVersion(String v) {
-    return v
-        .split('.')
-        .map((s) => int.tryParse(s.trim()) ?? 0)
-        .toList();
+    return v.split('.').map((s) => int.tryParse(s.trim()) ?? 0).toList();
   }
 }
 
@@ -170,4 +167,3 @@ final updateInfoProvider = FutureProvider<UpdateInfo?>((ref) async {
 /// Tracks whether the user dismissed the update banner for the current session.
 /// Resets to false when the app restarts (not persisted intentionally).
 final updateBannerDismissedProvider = StateProvider<bool>((_) => false);
-
