@@ -77,3 +77,4 @@ If user does not provide custom spoken text, TASKLY dynamically generates:
      - **Complete Task** (Primary prominent button)
 3. **Alarm History Screen**:
    - Timeline of triggered, snoozed, stopped, and completed alarms.
+
