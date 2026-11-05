@@ -126,3 +126,4 @@ test/
 - [ ] Run full test suite with `flutter test`.
 - [ ] Verify Android compilation with `flutter build apk --debug`.
 - [ ] Update `ATTRIBUTIONS.md` for any additional asset or package notes.
+
