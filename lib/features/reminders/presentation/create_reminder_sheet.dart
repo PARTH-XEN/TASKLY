@@ -8,6 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../services/alarm_service.dart';
 import '../data/reminders_repository.dart';
+import '../../voice/presentation/voice_settings_screen.dart';
 import 'widgets/relative_duration_chips.dart';
 import 'widgets/voice_personality_selector.dart';
 
@@ -311,6 +312,8 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
                   VoicePersonalitySelector(
                     selectedPersonality: _selectedPersonality,
                     onSelected: (p) => setState(() => _selectedPersonality = p),
+                    onPreview: (p) =>
+                        ref.read(ttsServiceProvider).previewPersonality(p),
                   ),
                   const SizedBox(height: AppSpacing.md),
 

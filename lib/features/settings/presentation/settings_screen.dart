@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/theme_provider.dart';
 import '../../../services/permission_service.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -26,7 +27,7 @@ class SettingsScreen extends StatelessWidget {
             subtitle: 'Nova, Max, Atlas, Echo (Offline Device TTS)',
             icon: Icons.record_voice_over_rounded,
             iconColor: AppColors.indigoLight,
-            onTap: () {},
+            onTap: () => context.push('/voice-settings'),
           ),
           const SizedBox(height: AppSpacing.lg),
 
@@ -34,10 +35,16 @@ class SettingsScreen extends StatelessWidget {
           _SettingsSectionHeader(title: 'Appearance'),
           _SettingsTile(
             title: 'Theme Mode',
-            subtitle: isDark ? 'Dark Mode' : 'Light Mode',
+            subtitle: isDark
+                ? 'Dark Mode (Tap to switch)'
+                : 'Light Mode (Tap to switch)',
             icon: Icons.palette_outlined,
             iconColor: AppColors.cyanLight,
-            onTap: () {},
+            onTap: () {
+              ref.read(themeModeProvider.notifier).state = isDark
+                  ? ThemeMode.light
+                  : ThemeMode.dark;
+            },
           ),
           const SizedBox(height: AppSpacing.lg),
 
@@ -93,7 +100,14 @@ class SettingsScreen extends StatelessWidget {
             subtitle: '1.0.0+1 (Offline First • Zero AI APIs)',
             icon: Icons.info_outline_rounded,
             iconColor: AppColors.darkTextTertiary,
-            onTap: () {},
+            onTap: () {
+              showAboutDialog(
+                context: context,
+                applicationName: 'TASKLY',
+                applicationVersion: '1.0.0+1',
+                applicationLegalese: '100% Free and Open Source Productivity & Smart Spoken Alarms',
+              );
+            },
           ),
         ],
       ),

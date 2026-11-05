@@ -8,7 +8,10 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../services/tts_service.dart';
 import '../../reminders/data/reminders_repository.dart';
+import '../../voice/domain/voice_personality.dart';
+import '../../voice/presentation/voice_settings_screen.dart';
 import '../data/alarm_history_repository.dart';
 import 'widgets/waveform_visualizer.dart';
 
@@ -36,11 +39,13 @@ class AlarmScreen extends ConsumerStatefulWidget {
 class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   late DateTime _currentTime;
   Timer? _clockTimer;
+  late final TtsService _ttsService;
 
   @override
   void initState() {
     super.initState();
     _currentTime = DateTime.now();
+    _ttsService = ref.read(ttsServiceProvider);
     _clockTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
         setState(() => _currentTime = DateTime.now());
@@ -49,11 +54,22 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
 
     // Provide tactile alarm vibration
     HapticFeedback.vibrate();
+
+    // Start native spoken reminder audio
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _ttsService.speak(
+          text: widget.spokenMessage,
+          personality: VoicePersonality.fromId(widget.voicePersonality),
+        );
+      }
+    });
   }
 
   @override
   void dispose() {
     _clockTimer?.cancel();
+    _ttsService.stop();
     super.dispose();
   }
 
@@ -85,6 +101,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
 
   Future<void> _onStop() async {
     HapticFeedback.heavyImpact();
+    await _ttsService.stop();
     await _logAction('stopped');
     if (mounted) {
       Navigator.of(context).maybePop();
@@ -93,6 +110,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
 
   Future<void> _onSnooze() async {
     HapticFeedback.mediumImpact();
+    await _ttsService.stop();
     final alarmService = ref.read(alarmServiceProvider);
     await alarmService.snoozeReminder(
       id: widget.reminderId,
@@ -113,6 +131,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
 
   Future<void> _onComplete() async {
     HapticFeedback.mediumImpact();
+    await _ttsService.stop();
     await _logAction('completed');
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

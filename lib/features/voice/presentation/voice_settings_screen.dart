@@ -16,7 +16,8 @@ class VoiceSettingsScreen extends ConsumerStatefulWidget {
   const VoiceSettingsScreen({super.key});
 
   @override
-  ConsumerState<VoiceSettingsScreen> createState() => _VoiceSettingsScreenState();
+  ConsumerState<VoiceSettingsScreen> createState() =>
+      _VoiceSettingsScreenState();
 }
 
 class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
@@ -28,7 +29,6 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
   String? _currentlyPreviewingId;
 
   List<Map<String, String>> _installedVoices = [];
-  List<String> _availableLanguages = ['en-US'];
   bool _isLoading = true;
 
   @override
@@ -48,7 +48,6 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
     final voiceName = await repo.getSelectedVoiceName();
 
     final voices = await tts.getInstalledVoices();
-    final languages = await tts.getLanguages();
 
     if (mounted) {
       setState(() {
@@ -58,9 +57,6 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
         _selectedLanguage = lang;
         _selectedVoiceName = voiceName;
         _installedVoices = voices;
-        if (languages.isNotEmpty) {
-          _availableLanguages = languages;
-        }
         _isLoading = false;
       });
     }
@@ -99,7 +95,9 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${personality.name} is now your default voice personality'),
+          content: Text(
+            '${personality.name} is now your default voice personality',
+          ),
           backgroundColor: personality.signatureColor,
         ),
       );
@@ -112,9 +110,7 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Voice Personalities & TTS'),
-      ),
+      appBar: AppBar(title: const Text('Voice Personalities & TTS')),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
@@ -124,7 +120,9 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
                 Container(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(
-                    color: AppColors.indigoLight.withValues(alpha: isDark ? 0.15 : 0.08),
+                    color: AppColors.indigoLight.withValues(
+                      alpha: isDark ? 0.15 : 0.08,
+                    ),
                     borderRadius: AppRadius.roundedLg,
                     border: Border.all(
                       color: AppColors.indigoLight.withValues(alpha: 0.3),
@@ -132,13 +130,19 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.security_rounded, color: AppColors.indigoLight, size: 24),
+                      const Icon(
+                        Icons.security_rounded,
+                        color: AppColors.indigoLight,
+                        size: 24,
+                      ),
                       const SizedBox(width: AppSpacing.md),
                       Expanded(
                         child: Text(
                           '100% Offline Device TTS. Voice synthesis runs locally on your phone with zero AI APIs or cloud costs.',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                             height: 1.4,
                           ),
                         ),
@@ -189,10 +193,16 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Speech Rate', style: theme.textTheme.titleMedium),
+                            Text(
+                              'Speech Rate',
+                              style: theme.textTheme.titleMedium,
+                            ),
                             Text(
                               '${_speechRate.toStringAsFixed(2)}x',
-                              style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.indigoLight),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.indigoLight,
+                              ),
                             ),
                           ],
                         ),
@@ -203,7 +213,9 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
                           divisions: 16,
                           onChanged: (val) {
                             setState(() => _speechRate = val);
-                            ref.read(voicePreferenceRepositoryProvider).setSpeechRate(val);
+                            ref
+                                .read(voicePreferenceRepositoryProvider)
+                                .setSpeechRate(val);
                           },
                         ),
                         const SizedBox(height: AppSpacing.sm),
@@ -212,10 +224,16 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Speech Pitch', style: theme.textTheme.titleMedium),
+                            Text(
+                              'Speech Pitch',
+                              style: theme.textTheme.titleMedium,
+                            ),
                             Text(
                               '${_speechPitch.toStringAsFixed(2)}x',
-                              style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.indigoLight),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.indigoLight,
+                              ),
                             ),
                           ],
                         ),
@@ -226,13 +244,18 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
                           divisions: 20,
                           onChanged: (val) {
                             setState(() => _speechPitch = val);
-                            ref.read(voicePreferenceRepositoryProvider).setSpeechPitch(val);
+                            ref
+                                .read(voicePreferenceRepositoryProvider)
+                                .setSpeechPitch(val);
                           },
                         ),
                         const SizedBox(height: AppSpacing.md),
 
                         // Dynamic Installed Voices
-                        Text('Installed Device Engine Voices', style: theme.textTheme.titleMedium),
+                        Text(
+                          'Installed Device Engine Voices',
+                          style: theme.textTheme.titleMedium,
+                        ),
                         const SizedBox(height: 4),
                         Text(
                           _installedVoices.isEmpty
@@ -244,11 +267,14 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
 
                         if (_installedVoices.isNotEmpty)
                           DropdownButtonFormField<String?>(
-                            value: _selectedVoiceName,
+                            initialValue: _selectedVoiceName,
                             isExpanded: true,
                             decoration: const InputDecoration(
                               labelText: 'Active Engine Voice',
-                              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 12,
+                              ),
                             ),
                             items: [
                               const DropdownMenuItem<String?>(
@@ -267,7 +293,9 @@ class _VoiceSettingsScreenState extends ConsumerState<VoiceSettingsScreen> {
                             ],
                             onChanged: (val) {
                               setState(() => _selectedVoiceName = val);
-                              ref.read(voicePreferenceRepositoryProvider).setSelectedVoiceName(val);
+                              ref
+                                  .read(voicePreferenceRepositoryProvider)
+                                  .setSelectedVoiceName(val);
                             },
                           ),
                       ],

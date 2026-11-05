@@ -2,43 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../voice/domain/voice_personality.dart';
 
 class VoicePersonalitySelector extends StatelessWidget {
   final String selectedPersonality;
   final ValueChanged<String> onSelected;
+  final ValueChanged<VoicePersonality>? onPreview;
 
   const VoicePersonalitySelector({
     super.key,
     required this.selectedPersonality,
     required this.onSelected,
+    this.onPreview,
   });
-
-  static const List<Map<String, dynamic>> personalities = [
-    {
-      'id': 'nova',
-      'name': 'Nova',
-      'trait': 'Friendly, calm & encouraging',
-      'color': AppColors.voiceNova,
-    },
-    {
-      'id': 'max',
-      'name': 'Max',
-      'trait': 'Energetic & motivating',
-      'color': AppColors.voiceMax,
-    },
-    {
-      'id': 'atlas',
-      'name': 'Atlas',
-      'trait': 'Professional & direct',
-      'color': AppColors.voiceAtlas,
-    },
-    {
-      'id': 'echo',
-      'name': 'Echo',
-      'trait': 'Simple & minimal',
-      'color': AppColors.voiceEcho,
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +22,14 @@ class VoicePersonalitySelector extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Column(
-      children: personalities.map((p) {
-        final id = p['id'] as String;
-        final name = p['name'] as String;
-        final trait = p['trait'] as String;
-        final color = p['color'] as Color;
-        final isSelected = selectedPersonality.toLowerCase() == id;
+      children: VoicePersonality.all.map((p) {
+        final isSelected = selectedPersonality.toLowerCase() == p.id;
+        final color = p.signatureColor;
 
         return Padding(
           padding: const EdgeInsets.only(bottom: AppSpacing.sm),
           child: InkWell(
-            onTap: () => onSelected(id),
+            onTap: () => onSelected(p.id),
             borderRadius: AppRadius.roundedMd,
             child: Container(
               padding: const EdgeInsets.all(AppSpacing.md),
@@ -64,8 +37,8 @@ class VoicePersonalitySelector extends StatelessWidget {
                 color: isSelected
                     ? color.withValues(alpha: isDark ? 0.2 : 0.1)
                     : (isDark
-                          ? AppColors.darkSurfaceElevated
-                          : AppColors.lightSurfaceElevated),
+                        ? AppColors.darkSurfaceElevated
+                        : AppColors.lightSurfaceElevated),
                 borderRadius: AppRadius.roundedMd,
                 border: Border.all(
                   color: isSelected
@@ -91,16 +64,25 @@ class VoicePersonalitySelector extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          name,
+                          p.name,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: isSelected ? color : null,
                           ),
                         ),
-                        Text(trait, style: theme.textTheme.bodySmall),
+                        Text(
+                          p.trait,
+                          style: theme.textTheme.bodySmall,
+                        ),
                       ],
                     ),
                   ),
+                  if (onPreview != null)
+                    IconButton(
+                      icon: Icon(Icons.volume_up_rounded, color: color, size: 20),
+                      tooltip: 'Audition ${p.name}',
+                      onPressed: () => onPreview!(p),
+                    ),
                   if (isSelected)
                     Icon(Icons.check_circle_rounded, color: color, size: 22),
                 ],

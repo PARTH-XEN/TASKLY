@@ -7,6 +7,7 @@ import '../../features/calendar/presentation/calendar_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
+import '../../features/voice/presentation/voice_settings_screen.dart';
 import '../../features/wishlist/presentation/wishlist_screen.dart';
 import '../../shared/widgets/main_scaffold_shell.dart';
 
@@ -97,6 +98,13 @@ final appRouter = GoRouter(
       name: 'alarm_history',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) => const AlarmHistoryScreen(),
+    ),
+    // Voice Personalities & TTS Engine Settings
+    GoRoute(
+      path: '/voice-settings',
+      name: 'voice_settings',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const VoiceSettingsScreen(),
     ),
   ],
 );

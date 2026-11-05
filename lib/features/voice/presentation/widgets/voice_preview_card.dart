@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../domain/voice_personality.dart';
@@ -30,7 +31,9 @@ class VoicePreviewCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: AppRadius.roundedLg,
         side: BorderSide(
-          color: isDefault ? color : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          color: isDefault
+              ? color
+              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
           width: isDefault ? 1.5 : 1.0,
         ),
       ),
@@ -49,7 +52,11 @@ class VoicePreviewCard extends StatelessWidget {
                     color: color.withValues(alpha: 0.15),
                     borderRadius: AppRadius.roundedMd,
                   ),
-                  child: Icon(Icons.record_voice_over_rounded, color: color, size: 24),
+                  child: Icon(
+                    Icons.record_voice_over_rounded,
+                    color: color,
+                    size: 24,
+                  ),
                 ),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
@@ -67,7 +74,10 @@ class VoicePreviewCard extends StatelessWidget {
                           if (isDefault) ...[
                             const SizedBox(width: AppSpacing.sm),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
                               decoration: BoxDecoration(
                                 color: color.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(4),
@@ -87,7 +97,9 @@ class VoicePreviewCard extends StatelessWidget {
                       Text(
                         personality.trait,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     ],
@@ -98,17 +110,16 @@ class VoicePreviewCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
 
             // Description
-            Text(
-              personality.description,
-              style: theme.textTheme.bodyMedium,
-            ),
+            Text(personality.description, style: theme.textTheme.bodyMedium),
             const SizedBox(height: AppSpacing.sm),
 
             // Sample Spoken Quote Bubble
             Container(
               padding: const EdgeInsets.all(AppSpacing.sm),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+                color: isDark
+                    ? AppColors.darkSurfaceElevated
+                    : AppColors.lightSurfaceElevated,
                 borderRadius: AppRadius.roundedMd,
               ),
               child: Row(

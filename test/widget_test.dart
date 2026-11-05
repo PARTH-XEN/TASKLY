@@ -6,11 +6,15 @@ import 'package:taskly/core/database/app_database.dart';
 import 'package:taskly/features/reminders/data/reminders_repository.dart';
 
 void main() {
-  testWidgets('TasklyApp initializes and displays Home dashboard', (WidgetTester tester) async {
+  testWidgets('TasklyApp initializes and displays Home dashboard', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          upcomingRemindersStreamProvider.overrideWith((ref) => Stream<List<Reminder>>.value([])),
+          upcomingRemindersStreamProvider.overrideWith(
+            (ref) => Stream<List<Reminder>>.value([]),
+          ),
         ],
         child: const TasklyApp(),
       ),
@@ -23,10 +27,25 @@ void main() {
     expect(find.text('NEXT SPOKEN REMINDER'), findsOneWidget);
 
     final navBarFinder = find.byType(NavigationBar);
-    expect(find.descendant(of: navBarFinder, matching: find.text('Home')), findsOneWidget);
-    expect(find.descendant(of: navBarFinder, matching: find.text('Tasks')), findsOneWidget);
-    expect(find.descendant(of: navBarFinder, matching: find.text('Calendar')), findsOneWidget);
-    expect(find.descendant(of: navBarFinder, matching: find.text('Wishlist')), findsOneWidget);
-    expect(find.descendant(of: navBarFinder, matching: find.text('Profile')), findsOneWidget);
+    expect(
+      find.descendant(of: navBarFinder, matching: find.text('Home')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: navBarFinder, matching: find.text('Tasks')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: navBarFinder, matching: find.text('Calendar')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: navBarFinder, matching: find.text('Wishlist')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: navBarFinder, matching: find.text('Profile')),
+      findsOneWidget,
+    );
   });
 }

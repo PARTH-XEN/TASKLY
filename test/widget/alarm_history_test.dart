@@ -5,16 +5,17 @@ import 'package:taskly/core/database/app_database.dart';
 import 'package:taskly/features/alarms/presentation/alarm_history_screen.dart';
 
 void main() {
-  testWidgets('AlarmHistoryScreen renders empty state when no alarms logged',
-      (WidgetTester tester) async {
+  testWidgets('AlarmHistoryScreen renders empty state when no alarms logged', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          alarmHistoryStreamProvider.overrideWith((ref) => Stream<List<AlarmHistoryData>>.value([])),
+          alarmHistoryStreamProvider.overrideWith(
+            (ref) => Stream<List<AlarmHistoryData>>.value([]),
+          ),
         ],
-        child: const MaterialApp(
-          home: AlarmHistoryScreen(),
-        ),
+        child: const MaterialApp(home: AlarmHistoryScreen()),
       ),
     );
     await tester.pump();

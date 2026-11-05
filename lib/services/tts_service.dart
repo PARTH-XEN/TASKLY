@@ -1,4 +1,5 @@
 import 'package:flutter_tts/flutter_tts.dart';
+
 import '../features/voice/domain/voice_personality.dart';
 
 /// Service managing on-device Text-to-Speech synthesis and voice discovery.
@@ -67,10 +68,7 @@ class TtsService {
 
   /// Previews a voice personality using its signature preview quote.
   Future<void> previewPersonality(VoicePersonality personality) async {
-    await speak(
-      text: personality.previewQuote,
-      personality: personality,
-    );
+    await speak(text: personality.previewQuote, personality: personality);
   }
 
   /// Immediately stops any active spoken audio.
@@ -89,10 +87,12 @@ class TtsService {
       if (voices is List) {
         return voices
             .whereType<Map>()
-            .map((v) => {
-                  'name': v['name']?.toString() ?? '',
-                  'locale': v['locale']?.toString() ?? '',
-                })
+            .map(
+              (v) => {
+                'name': v['name']?.toString() ?? '',
+                'locale': v['locale']?.toString() ?? '',
+              },
+            )
             .where((v) => v['name']!.isNotEmpty)
             .toList();
       }

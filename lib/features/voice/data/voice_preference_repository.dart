@@ -1,10 +1,12 @@
-import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
 import '../domain/voice_personality.dart';
 
-final voicePreferenceRepositoryProvider = Provider<VoicePreferenceRepository>((ref) {
+final voicePreferenceRepositoryProvider = Provider<VoicePreferenceRepository>((
+  ref,
+) {
   final db = ref.watch(databaseProvider);
   return VoicePreferenceRepository(db);
 });
@@ -21,14 +23,16 @@ class VoicePreferenceRepository {
   static const String keyVoiceName = 'selected_voice_name';
 
   Future<String?> _getSetting(String key) async {
-    final entry = await (_db.select(_db.appSettings)
-          ..where((tbl) => tbl.key.equals(key)))
-        .getSingleOrNull();
+    final entry = await (_db.select(
+      _db.appSettings,
+    )..where((tbl) => tbl.key.equals(key))).getSingleOrNull();
     return entry?.value;
   }
 
   Future<void> _setSetting(String key, String value) async {
-    await _db.into(_db.appSettings).insertOnConflictUpdate(
+    await _db
+        .into(_db.appSettings)
+        .insertOnConflictUpdate(
           AppSettingsCompanion.insert(key: key, value: value),
         );
   }
@@ -81,7 +85,9 @@ class VoicePreferenceRepository {
 
   Future<void> setSelectedVoiceName(String? voiceName) async {
     if (voiceName == null) {
-      await (_db.delete(_db.appSettings)..where((tbl) => tbl.key.equals(keyVoiceName))).go();
+      await (_db.delete(
+        _db.appSettings,
+      )..where((tbl) => tbl.key.equals(keyVoiceName))).go();
     } else {
       await _setSetting(keyVoiceName, voiceName);
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
 
 /// Predefined offline voice personality model for TASKLY.
@@ -27,33 +28,39 @@ class VoicePersonality {
     id: 'nova',
     name: 'Nova',
     trait: 'Friendly & Encouraging',
-    description: 'Warm, calm, and supportive voice that gently helps you stay on track.',
+    description:
+        'Warm, calm, and supportive voice that gently helps you stay on track.',
     defaultRate: 0.48,
     defaultPitch: 1.05,
     signatureColor: AppColors.voiceNova,
-    previewQuote: "Hey! It's time to get started on your task. You've got this!",
+    previewQuote:
+        "Hey! It's time to get started on your task. You've got this!",
   );
 
   static const VoicePersonality max = VoicePersonality(
     id: 'max',
     name: 'Max',
     trait: 'Energetic & Enthusiastic',
-    description: 'High-energy, fast-paced motivating voice designed to fire you up.',
+    description:
+        'High-energy, fast-paced motivating voice designed to fire you up.',
     defaultRate: 0.58,
     defaultPitch: 1.15,
     signatureColor: AppColors.voiceMax,
-    previewQuote: "Let's go! Time to crush your goals and get things done right now!",
+    previewQuote:
+        "Let's go! Time to crush your goals and get things done right now!",
   );
 
   static const VoicePersonality atlas = VoicePersonality(
     id: 'atlas',
     name: 'Atlas',
     trait: 'Professional & Direct',
-    description: 'Clear, authoritative, and structured voice for focused productivity.',
+    description:
+        'Clear, authoritative, and structured voice for focused productivity.',
     defaultRate: 0.50,
     defaultPitch: 0.90,
     signatureColor: AppColors.voiceAtlas,
-    previewQuote: 'Attention: your scheduled activity is due now. Commencing task.',
+    previewQuote:
+        'Attention: your scheduled activity is due now. Commencing task.',
   );
 
   static const VoicePersonality echo = VoicePersonality(
@@ -72,9 +79,6 @@ class VoicePersonality {
   static VoicePersonality fromId(String? id) {
     if (id == null) return nova;
     final normalized = id.toLowerCase().trim();
-    return all.firstWhere(
-      (p) => p.id == normalized,
-      orElse: () => nova,
-    );
+    return all.firstWhere((p) => p.id == normalized, orElse: () => nova);
   }
 }
