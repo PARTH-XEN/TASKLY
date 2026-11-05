@@ -3,7 +3,11 @@ import 'package:flutter/services.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../features/calendar/presentation/widgets/create_edit_event_sheet.dart';
+import '../../features/productivity/presentation/focus_timer_sheet.dart';
 import '../../features/reminders/presentation/create_reminder_sheet.dart';
+import '../../features/tasks/presentation/widgets/create_edit_task_sheet.dart';
+import '../../features/wishlist/presentation/widgets/create_edit_wishlist_sheet.dart';
 
 /// Modal bottom sheet presenting quick creation actions.
 class QuickActionSheet extends StatelessWidget {
@@ -94,10 +98,11 @@ class QuickActionSheet extends StatelessWidget {
             iconColor: AppColors.successLight,
             onTap: () {
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Task creation ready for Phase 4'),
-                ),
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (_) => const CreateEditTaskSheet(),
               );
             },
           ),
@@ -111,10 +116,11 @@ class QuickActionSheet extends StatelessWidget {
             iconColor: AppColors.cyanLight,
             onTap: () {
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Calendar event ready for Phase 4'),
-                ),
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (_) => const CreateEditEventSheet(),
               );
             },
           ),
@@ -128,11 +134,25 @@ class QuickActionSheet extends StatelessWidget {
             iconColor: AppColors.warningLight,
             onTap: () {
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Wishlist item ready for Phase 4'),
-                ),
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (_) => const CreateEditWishlistSheet(),
               );
+            },
+          ),
+          const SizedBox(height: AppSpacing.sm),
+
+          // Focus Session
+          _ActionCard(
+            title: 'Focus Session',
+            subtitle: '25-minute Pomodoro focus timer',
+            icon: Icons.timer_rounded,
+            iconColor: AppColors.primaryIndigo,
+            onTap: () {
+              Navigator.of(context).pop();
+              FocusTimerSheet.show(context);
             },
           ),
         ],
@@ -166,18 +186,18 @@ class _ActionCard extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          HapticFeedback.selectionClick();
-          onTap();
-        },
-        borderRadius: AppRadius.roundedLg,
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Container(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.md,
+          ),
           decoration: BoxDecoration(
             color: isDark
                 ? AppColors.darkSurfaceElevated
                 : AppColors.lightSurfaceElevated,
-            borderRadius: AppRadius.roundedLg,
+            borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(
               color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
               width: 1,
@@ -190,7 +210,7 @@ class _ActionCard extends StatelessWidget {
                 height: 44,
                 decoration: BoxDecoration(
                   color: iconColor.withValues(alpha: 0.15),
-                  borderRadius: AppRadius.roundedMd,
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Icon(icon, color: iconColor, size: 22),
               ),
@@ -215,16 +235,17 @@ class _ActionCard extends StatelessWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.indigoLight.withValues(
-                                alpha: 0.2,
+                              color: AppColors.primaryIndigo,
+                              borderRadius: BorderRadius.circular(
+                                AppRadius.full,
                               ),
-                              borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
                               badge!,
                               style: theme.textTheme.labelSmall?.copyWith(
-                                color: AppColors.indigoLight,
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 9,
                               ),
                             ),
                           ),
@@ -232,14 +253,23 @@ class _ActionCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 2),
-                    Text(subtitle, style: theme.textTheme.bodySmall),
+                    Text(
+                      subtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              const Icon(
-                Icons.chevron_right_rounded,
-                size: 20,
-                color: AppColors.darkTextTertiary,
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 14,
+                color: isDark
+                    ? AppColors.darkTextTertiary
+                    : AppColors.lightTextTertiary,
               ),
             ],
           ),

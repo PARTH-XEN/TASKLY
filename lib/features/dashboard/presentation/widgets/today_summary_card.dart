@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../tasks/data/tasks_repository.dart';
 
-class TodaySummaryCard extends StatelessWidget {
-  final int pendingTasks;
-  final int completedTasks;
+class TodaySummaryCard extends ConsumerWidget {
+  final int? pendingTasks;
+  final int? completedTasks;
 
-  const TodaySummaryCard({
-    super.key,
-    this.pendingTasks = 3,
-    this.completedTasks = 5,
-  });
+  const TodaySummaryCard({super.key, this.pendingTasks, this.completedTasks});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final total = pendingTasks + completedTasks;
-    final double completionRate = total > 0 ? (completedTasks / total) : 0.0;
+
+    final statsAsync = ref.watch(taskStatsStreamProvider);
+    final actualPending = pendingTasks ?? statsAsync.value?.pendingCount ?? 0;
+    final actualCompleted =
+        completedTasks ?? statsAsync.value?.completedCount ?? 0;
+
+    final total = actualPending + actualCompleted;
+    final double completionRate = total > 0 ? (actualCompleted / total) : 0.0;
     final int percentage = (completionRate * 100).round();
 
     return Padding(
@@ -74,7 +78,7 @@ class TodaySummaryCard extends StatelessWidget {
                   Expanded(
                     child: _StatTile(
                       label: 'Pending Tasks',
-                      count: pendingTasks,
+                      count: actualPending,
                       color: AppColors.warningLight,
                       icon: Icons.pending_actions_rounded,
                     ),
@@ -89,7 +93,7 @@ class TodaySummaryCard extends StatelessWidget {
                   Expanded(
                     child: _StatTile(
                       label: 'Completed',
-                      count: completedTasks,
+                      count: actualCompleted,
                       color: AppColors.successLight,
                       icon: Icons.task_alt_rounded,
                     ),
@@ -120,22 +124,36 @@ class _StatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, color: color, size: 20),
+        Container(
+          padding: const EdgeInsets.all(AppSpacing.sm),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: AppRadius.roundedSm,
+          ),
+          child: Icon(icon, color: color, size: 20),
+        ),
         const SizedBox(width: AppSpacing.sm),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '$count',
-              style: theme.textTheme.headlineSmall?.copyWith(
+              count.toString(),
+              style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(label, style: theme.textTheme.bodySmall),
+            Text(
+              label,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
+              ),
+            ),
           ],
         ),
       ],

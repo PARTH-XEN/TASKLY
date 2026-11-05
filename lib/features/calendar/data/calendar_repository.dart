@@ -12,18 +12,21 @@ final calendarRepositoryProvider = Provider<CalendarRepository>((ref) {
   return CalendarRepository(db, alarmService);
 });
 
-final selectedCalendarDateProvider =
-    StateProvider<DateTime>((ref) => DateTime.now());
+final selectedCalendarDateProvider = StateProvider<DateTime>(
+  (ref) => DateTime.now(),
+);
 
-final eventsForSelectedDateStreamProvider =
-    StreamProvider<List<CalendarEvent>>((ref) {
-  final repo = ref.watch(calendarRepositoryProvider);
-  final selectedDate = ref.watch(selectedCalendarDateProvider);
-  return repo.watchEventsForDate(selectedDate);
-});
+final eventsForSelectedDateStreamProvider = StreamProvider<List<CalendarEvent>>(
+  (ref) {
+    final repo = ref.watch(calendarRepositoryProvider);
+    final selectedDate = ref.watch(selectedCalendarDateProvider);
+    return repo.watchEventsForDate(selectedDate);
+  },
+);
 
-final allCalendarEventsStreamProvider =
-    StreamProvider<List<CalendarEvent>>((ref) {
+final allCalendarEventsStreamProvider = StreamProvider<List<CalendarEvent>>((
+  ref,
+) {
   final repo = ref.watch(calendarRepositoryProvider);
   return repo.watchAllEvents();
 });
@@ -35,9 +38,9 @@ class CalendarRepository {
   CalendarRepository(this._db, this._alarmService);
 
   Stream<List<CalendarEvent>> watchAllEvents() {
-    return (_db.select(_db.calendarEvents)
-          ..orderBy([(tbl) => OrderingTerm.asc(tbl.eventDate)]))
-        .watch();
+    return (_db.select(
+      _db.calendarEvents,
+    )..orderBy([(tbl) => OrderingTerm.asc(tbl.eventDate)])).watch();
   }
 
   Stream<List<CalendarEvent>> watchEventsForDate(DateTime date) {
@@ -46,16 +49,15 @@ class CalendarRepository {
         return e.eventDate.year == date.year &&
             e.eventDate.month == date.month &&
             e.eventDate.day == date.day;
-      }).toList()
-        ..sort((a, b) {
-          // Sort by startTime if available, otherwise by title
-          if (a.startTime != null && b.startTime != null) {
-            return a.startTime!.compareTo(b.startTime!);
-          }
-          if (a.startTime != null) return -1;
-          if (b.startTime != null) return 1;
-          return a.title.compareTo(b.title);
-        });
+      }).toList()..sort((a, b) {
+        // Sort by startTime if available, otherwise by title
+        if (a.startTime != null && b.startTime != null) {
+          return a.startTime!.compareTo(b.startTime!);
+        }
+        if (a.startTime != null) return -1;
+        if (b.startTime != null) return 1;
+        return a.title.compareTo(b.title);
+      });
     });
   }
 
@@ -71,7 +73,9 @@ class CalendarRepository {
     bool hasAlarm = false,
     String? reminderId,
   }) async {
-    await _db.into(_db.calendarEvents).insert(
+    await _db
+        .into(_db.calendarEvents)
+        .insert(
           CalendarEventsCompanion.insert(
             id: id,
             title: title,
@@ -114,8 +118,9 @@ class CalendarRepository {
     bool isImportantDate = false,
     required bool hasAlarm,
   }) async {
-    await (_db.update(_db.calendarEvents)..where((tbl) => tbl.id.equals(id)))
-        .write(
+    await (_db.update(
+      _db.calendarEvents,
+    )..where((tbl) => tbl.id.equals(id))).write(
       CalendarEventsCompanion(
         title: Value(title),
         description: Value(description),
@@ -147,15 +152,17 @@ class CalendarRepository {
   }
 
   Future<void> deleteEvent(String id) async {
-    final existing = await (_db.select(_db.calendarEvents)
-          ..where((tbl) => tbl.id.equals(id)))
-        .getSingleOrNull();
+    final existing = await (_db.select(
+      _db.calendarEvents,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
 
     if (existing != null && existing.hasAlarm) {
       await _alarmService.cancelReminder(id);
     }
 
-    await (_db.delete(_db.calendarEvents)..where((tbl) => tbl.id.equals(id))).go();
+    await (_db.delete(
+      _db.calendarEvents,
+    )..where((tbl) => tbl.id.equals(id))).go();
   }
 
   DateTime _calculateEventAlarmDateTime(DateTime eventDate, String? startTime) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_spacing.dart';
+import '../../productivity/presentation/focus_timer_sheet.dart';
 import '../../reminders/presentation/create_reminder_sheet.dart';
 import 'widgets/greeting_header.dart';
 import 'widgets/next_reminder_card.dart';
@@ -19,7 +20,7 @@ class DashboardScreen extends StatelessWidget {
         bottom: false,
         child: RefreshIndicator(
           onRefresh: () async {
-            await Future.delayed(const Duration(milliseconds: 600));
+            await Future.delayed(const Duration(milliseconds: 400));
           },
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(
@@ -36,13 +37,7 @@ class DashboardScreen extends StatelessWidget {
                   onNewReminder: () => CreateReminderSheet.show(context),
                   onNewTask: () => context.go('/tasks'),
                   onCalendar: () => context.go('/calendar'),
-                  onFocus: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Focus timer coming in Phase 5'),
-                      ),
-                    );
-                  },
+                  onFocus: () => FocusTimerSheet.show(context),
                 ),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),

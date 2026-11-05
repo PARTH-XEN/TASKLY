@@ -7,36 +7,35 @@ import 'package:taskly/features/tasks/presentation/tasks_screen.dart';
 import 'package:taskly/features/tasks/presentation/widgets/task_item_tile.dart';
 
 void main() {
-  testWidgets('TasksScreen displays header, filter chips and empty state initially',
-      (tester) async {
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          filteredTasksStreamProvider.overrideWith(
-            (ref) => Stream.value([]),
-          ),
-          taskStatsStreamProvider.overrideWith(
-            (ref) => Stream.value(TaskStats.empty()),
-          ),
-        ],
-        child: const MaterialApp(
-          home: TasksScreen(),
+  testWidgets(
+    'TasksScreen displays header, filter chips and empty state initially',
+    (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            filteredTasksStreamProvider.overrideWith((ref) => Stream.value([])),
+            taskStatsStreamProvider.overrideWith(
+              (ref) => Stream.value(TaskStats.empty()),
+            ),
+          ],
+          child: const MaterialApp(home: TasksScreen()),
         ),
-      ),
-    );
+      );
 
-    await tester.pump();
+      await tester.pump();
 
-    expect(find.text('Tasks'), findsOneWidget);
-    expect(find.text('All'), findsOneWidget);
-    expect(find.text('Today'), findsOneWidget);
-    expect(find.text('Upcoming'), findsOneWidget);
-    expect(find.text('No tasks found'), findsOneWidget);
-    expect(find.byType(FloatingActionButton), findsOneWidget);
-  });
+      expect(find.text('Tasks'), findsOneWidget);
+      expect(find.text('All'), findsOneWidget);
+      expect(find.text('Today'), findsOneWidget);
+      expect(find.text('Upcoming'), findsOneWidget);
+      expect(find.text('No tasks found'), findsOneWidget);
+      expect(find.byType(FloatingActionButton), findsOneWidget);
+    },
+  );
 
-  testWidgets('TasksScreen displays TaskItemTile when tasks are provided',
-      (tester) async {
+  testWidgets('TasksScreen displays TaskItemTile when tasks are provided', (
+    tester,
+  ) async {
     final sampleTask = Task(
       id: 'task-test-1',
       title: 'Finish Unit Tests',
@@ -67,9 +66,7 @@ void main() {
             ),
           ),
         ],
-        child: const MaterialApp(
-          home: TasksScreen(),
-        ),
+        child: const MaterialApp(home: TasksScreen()),
       ),
     );
 

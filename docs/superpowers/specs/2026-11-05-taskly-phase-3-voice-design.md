@@ -56,3 +56,4 @@ lib/
 
 - In `AlarmScreen`: When the alarm activates, `TtsService.speak(...)` automatically speaks the reminder title and custom message using the selected voice personality.
 - In `CreateReminderSheet`: Users can tap a "Preview" icon next to each personality chip to immediately audition the voice output.
+

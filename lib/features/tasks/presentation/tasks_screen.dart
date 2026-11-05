@@ -94,7 +94,10 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
         children: [
           // Filter & Category Bar
           Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.sm, bottom: AppSpacing.xs),
+            padding: const EdgeInsets.only(
+              top: AppSpacing.sm,
+              bottom: AppSpacing.xs,
+            ),
             child: TaskFilterBar(
               selectedFilter: selectedFilter,
               selectedCategory: selectedCategory,
@@ -167,7 +170,9 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                             width: 64,
                             height: 64,
                             decoration: BoxDecoration(
-                              color: AppColors.indigoLight.withValues(alpha: 0.12),
+                              color: AppColors.indigoLight.withValues(
+                                alpha: 0.12,
+                              ),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -242,9 +247,8 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, _) => Center(
-                child: Text('Error loading tasks: $err'),
-              ),
+              error: (err, _) =>
+                  Center(child: Text('Error loading tasks: $err')),
             ),
           ),
         ],

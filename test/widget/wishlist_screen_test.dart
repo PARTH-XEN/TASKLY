@@ -7,33 +7,34 @@ import 'package:taskly/features/wishlist/presentation/widgets/wishlist_item_card
 import 'package:taskly/features/wishlist/presentation/wishlist_screen.dart';
 
 void main() {
-  testWidgets('WishlistScreen displays header, category chips and empty state initially',
-      (tester) async {
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          filteredWishlistStreamProvider.overrideWith(
-            (ref) => Stream.value([]),
-          ),
-        ],
-        child: const MaterialApp(
-          home: WishlistScreen(),
+  testWidgets(
+    'WishlistScreen displays header, category chips and empty state initially',
+    (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            filteredWishlistStreamProvider.overrideWith(
+              (ref) => Stream.value([]),
+            ),
+          ],
+          child: const MaterialApp(home: WishlistScreen()),
         ),
-      ),
-    );
+      );
 
-    await tester.pump();
+      await tester.pump();
 
-    expect(find.text('Wishlist & Goals'), findsOneWidget);
-    expect(find.text('All'), findsOneWidget);
-    expect(find.text('Goals'), findsOneWidget);
-    expect(find.text('Skills'), findsOneWidget);
-    expect(find.text('No items in your wishlist'), findsOneWidget);
-    expect(find.byType(FloatingActionButton), findsOneWidget);
-  });
+      expect(find.text('Wishlist & Goals'), findsOneWidget);
+      expect(find.text('All'), findsOneWidget);
+      expect(find.text('Goals'), findsOneWidget);
+      expect(find.text('Skills'), findsOneWidget);
+      expect(find.text('No items in your wishlist'), findsOneWidget);
+      expect(find.byType(FloatingActionButton), findsOneWidget);
+    },
+  );
 
-  testWidgets('WishlistScreen renders WishlistItemCard when items exist',
-      (tester) async {
+  testWidgets('WishlistScreen renders WishlistItemCard when items exist', (
+    tester,
+  ) async {
     final sampleItem = WishlistItem(
       id: 'wish-test-1',
       title: 'Learn Flutter Animations',
@@ -52,9 +53,7 @@ void main() {
             (ref) => Stream.value([sampleItem]),
           ),
         ],
-        child: const MaterialApp(
-          home: WishlistScreen(),
-        ),
+        child: const MaterialApp(home: WishlistScreen()),
       ),
     );
 

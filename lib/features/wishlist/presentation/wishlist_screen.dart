@@ -58,7 +58,8 @@ class WishlistScreen extends ConsumerWidget {
             ),
             child: Row(
               children: categories.map((cat) {
-                final isSelected = selectedCategory == cat.$1 ||
+                final isSelected =
+                    selectedCategory == cat.$1 ||
                     (selectedCategory == null && cat.$1 == null);
                 return Padding(
                   padding: const EdgeInsets.only(right: AppSpacing.xs),
@@ -72,20 +73,21 @@ class WishlistScreen extends ConsumerWidget {
                         : AppColors.lightSurfaceElevated,
                     labelStyle: TextStyle(
                       fontSize: 12,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.w500,
                       color: isSelected
                           ? Colors.white
                           : (isDark
-                              ? AppColors.darkTextPrimary
-                              : AppColors.lightTextPrimary),
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
                     ),
                     side: BorderSide(
                       color: isSelected
                           ? AppColors.indigoLight
                           : (isDark
-                              ? AppColors.darkBorder
-                              : AppColors.lightBorder),
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder),
                     ),
                     onSelected: (_) {
                       ref.read(wishlistCategoryFilterProvider.notifier).state =
@@ -114,8 +116,9 @@ class WishlistScreen extends ConsumerWidget {
                             width: 64,
                             height: 64,
                             decoration: BoxDecoration(
-                              color:
-                                  AppColors.warningLight.withValues(alpha: 0.15),
+                              color: AppColors.warningLight.withValues(
+                                alpha: 0.15,
+                              ),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -174,9 +177,7 @@ class WishlistScreen extends ConsumerWidget {
                             .read(wishlistRepositoryProvider)
                             .deleteWishlistItem(item.id);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Deleted "${item.title}"'),
-                          ),
+                          SnackBar(content: Text('Deleted "${item.title}"')),
                         );
                       },
                     );
@@ -184,9 +185,8 @@ class WishlistScreen extends ConsumerWidget {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, _) => Center(
-                child: Text('Error loading wishlist: $err'),
-              ),
+              error: (err, _) =>
+                  Center(child: Text('Error loading wishlist: $err')),
             ),
           ),
         ],

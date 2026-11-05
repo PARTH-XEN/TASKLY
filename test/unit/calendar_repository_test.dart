@@ -45,8 +45,7 @@ void main() {
   });
 
   group('CalendarRepository & hasAlarm Unit Tests', () {
-    test('createEvent with hasAlarm == false saves event and NEVER schedules alarm',
-        () async {
+    test('createEvent with hasAlarm == false saves event and NEVER schedules alarm', () async {
       final tomorrow = DateTime.now().add(const Duration(days: 1));
 
       await repository.createEvent(
@@ -66,72 +65,77 @@ void main() {
       expect(mockAlarmService.scheduledAlarms, isEmpty);
     });
 
-    test('createEvent with hasAlarm == true saves event AND schedules exact alarm',
-        () async {
-      final tomorrow = DateTime.now().add(const Duration(days: 1));
+    test(
+      'createEvent with hasAlarm == true saves event AND schedules exact alarm',
+      () async {
+        final tomorrow = DateTime.now().add(const Duration(days: 1));
 
-      await repository.createEvent(
-        id: 'evt-alarm',
-        title: 'Final Exam',
-        description: 'Crucial exam reminder',
-        eventDate: tomorrow,
-        startTime: '10:00',
-        hasAlarm: true,
-      );
+        await repository.createEvent(
+          id: 'evt-alarm',
+          title: 'Final Exam',
+          description: 'Crucial exam reminder',
+          eventDate: tomorrow,
+          startTime: '10:00',
+          hasAlarm: true,
+        );
 
-      final events = await repository.watchAllEvents().first;
-      expect(events.length, 1);
-      expect(events.first.hasAlarm, isTrue);
+        final events = await repository.watchAllEvents().first;
+        expect(events.length, 1);
+        expect(events.first.hasAlarm, isTrue);
 
-      // Crucial: AlarmService MUST have been called
-      expect(mockAlarmService.scheduledAlarms, contains('evt-alarm'));
-    });
+        // Crucial: AlarmService MUST have been called
+        expect(mockAlarmService.scheduledAlarms, contains('evt-alarm'));
+      },
+    );
 
-    test('updateEvent toggling hasAlarm from true to false cancels the alarm',
-        () async {
-      final tomorrow = DateTime.now().add(const Duration(days: 1));
+    test(
+      'updateEvent toggling hasAlarm from true to false cancels the alarm',
+      () async {
+        final tomorrow = DateTime.now().add(const Duration(days: 1));
 
-      await repository.createEvent(
-        id: 'evt-toggle',
-        title: 'Dentist Visit',
-        eventDate: tomorrow,
-        startTime: '14:00',
-        hasAlarm: true,
-      );
-      expect(mockAlarmService.scheduledAlarms, contains('evt-toggle'));
+        await repository.createEvent(
+          id: 'evt-toggle',
+          title: 'Dentist Visit',
+          eventDate: tomorrow,
+          startTime: '14:00',
+          hasAlarm: true,
+        );
+        expect(mockAlarmService.scheduledAlarms, contains('evt-toggle'));
 
-      await repository.updateEvent(
-        id: 'evt-toggle',
-        title: 'Dentist Visit',
-        eventDate: tomorrow,
-        startTime: '14:00',
-        hasAlarm: false, // Turned off alarm
-      );
+        await repository.updateEvent(
+          id: 'evt-toggle',
+          title: 'Dentist Visit',
+          eventDate: tomorrow,
+          startTime: '14:00',
+          hasAlarm: false, // Turned off alarm
+        );
 
-      expect(mockAlarmService.cancelledAlarms, contains('evt-toggle'));
-    });
+        expect(mockAlarmService.cancelledAlarms, contains('evt-toggle'));
+      },
+    );
 
-    test('deleteEvent on event with hasAlarm == true cancels the scheduled alarm',
-        () async {
-      final tomorrow = DateTime.now().add(const Duration(days: 1));
+    test(
+      'deleteEvent on event with hasAlarm == true cancels the scheduled alarm',
+      () async {
+        final tomorrow = DateTime.now().add(const Duration(days: 1));
 
-      await repository.createEvent(
-        id: 'evt-del',
-        title: 'Flight Departure',
-        eventDate: tomorrow,
-        startTime: '18:00',
-        hasAlarm: true,
-      );
+        await repository.createEvent(
+          id: 'evt-del',
+          title: 'Flight Departure',
+          eventDate: tomorrow,
+          startTime: '18:00',
+          hasAlarm: true,
+        );
 
-      await repository.deleteEvent('evt-del');
+        await repository.deleteEvent('evt-del');
 
-      expect(mockAlarmService.cancelledAlarms, contains('evt-del'));
-      final events = await repository.watchAllEvents().first;
-      expect(events, isEmpty);
-    });
+        expect(mockAlarmService.cancelledAlarms, contains('evt-del'));
+        final events = await repository.watchAllEvents().first;
+        expect(events, isEmpty);
+      },
+    );
 
-    test('watchEventsForDate filters events matching the exact year, month, and day',
-        () async {
+    test('watchEventsForDate filters events matching the exact year, month, and day', () async {
       final today = DateTime.now();
       final tomorrow = today.add(const Duration(days: 1));
 

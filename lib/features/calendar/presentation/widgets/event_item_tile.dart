@@ -148,10 +148,14 @@ class EventItemTile extends StatelessWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryIndigo.withValues(alpha: 0.15),
+                              color: AppColors.primaryIndigo.withValues(
+                                alpha: 0.15,
+                              ),
                               borderRadius: BorderRadius.circular(4),
                               border: Border.all(
-                                color: AppColors.primaryIndigo.withValues(alpha: 0.3),
+                                color: AppColors.primaryIndigo.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                             child: Row(

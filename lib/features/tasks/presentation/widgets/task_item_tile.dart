@@ -53,7 +53,8 @@ class TaskItemTile extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final priorityColor = _getPriorityColor(task.priority);
     final now = DateTime.now();
-    final isOverdue = task.dueDate != null &&
+    final isOverdue =
+        task.dueDate != null &&
         !task.isCompleted &&
         task.dueDate!.isBefore(DateTime(now.year, now.month, now.day));
 
@@ -131,8 +132,8 @@ class TaskItemTile extends StatelessWidget {
                         color: task.isCompleted
                             ? AppColors.successLight
                             : (isDark
-                                ? AppColors.darkTextTertiary
-                                : AppColors.lightTextTertiary),
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextTertiary),
                         width: 2,
                       ),
                     ),
@@ -161,11 +162,11 @@ class TaskItemTile extends StatelessWidget {
                               : null,
                           color: task.isCompleted
                               ? (isDark
-                                  ? AppColors.darkTextTertiary
-                                  : AppColors.lightTextTertiary)
+                                    ? AppColors.darkTextTertiary
+                                    : AppColors.lightTextTertiary)
                               : (isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.lightTextPrimary),
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary),
                         ),
                       ),
                       if (task.description != null &&
@@ -258,8 +259,8 @@ class TaskItemTile extends StatelessWidget {
                                   color: isOverdue
                                       ? AppColors.dangerLight
                                       : (isDark
-                                          ? AppColors.darkTextTertiary
-                                          : AppColors.lightTextTertiary),
+                                            ? AppColors.darkTextTertiary
+                                            : AppColors.lightTextTertiary),
                                 ),
                                 const SizedBox(width: 3),
                                 Text(
@@ -272,8 +273,8 @@ class TaskItemTile extends StatelessWidget {
                                     color: isOverdue
                                         ? AppColors.dangerLight
                                         : (isDark
-                                            ? AppColors.darkTextTertiary
-                                            : AppColors.lightTextTertiary),
+                                              ? AppColors.darkTextTertiary
+                                              : AppColors.lightTextTertiary),
                                   ),
                                 ),
                                 if (task.dueTime != null) ...[

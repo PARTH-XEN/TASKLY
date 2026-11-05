@@ -27,10 +27,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => CreateEditEventSheet(
-        eventToEdit: event,
-        initialDate: selectedDate,
-      ),
+      builder: (_) =>
+          CreateEditEventSheet(eventToEdit: event, initialDate: selectedDate),
     );
   }
 
@@ -216,7 +214,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                               width: 48,
                               height: 48,
                               decoration: BoxDecoration(
-                                color: AppColors.cyanLight.withValues(alpha: 0.12),
+                                color: AppColors.cyanLight.withValues(
+                                  alpha: 0.12,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
@@ -271,9 +271,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                             .read(calendarRepositoryProvider)
                             .deleteEvent(event.id);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Deleted "${event.title}"'),
-                          ),
+                          SnackBar(content: Text('Deleted "${event.title}"')),
                         );
                       },
                     );
@@ -281,9 +279,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, _) => Center(
-                child: Text('Error loading events: $err'),
-              ),
+              error: (err, _) =>
+                  Center(child: Text('Error loading events: $err')),
             ),
           ),
         ],

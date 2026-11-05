@@ -37,8 +37,8 @@ class VoicePersonalitySelector extends StatelessWidget {
                 color: isSelected
                     ? color.withValues(alpha: isDark ? 0.2 : 0.1)
                     : (isDark
-                        ? AppColors.darkSurfaceElevated
-                        : AppColors.lightSurfaceElevated),
+                          ? AppColors.darkSurfaceElevated
+                          : AppColors.lightSurfaceElevated),
                 borderRadius: AppRadius.roundedMd,
                 border: Border.all(
                   color: isSelected
@@ -70,16 +70,17 @@ class VoicePersonalitySelector extends StatelessWidget {
                             color: isSelected ? color : null,
                           ),
                         ),
-                        Text(
-                          p.trait,
-                          style: theme.textTheme.bodySmall,
-                        ),
+                        Text(p.trait, style: theme.textTheme.bodySmall),
                       ],
                     ),
                   ),
                   if (onPreview != null)
                     IconButton(
-                      icon: Icon(Icons.volume_up_rounded, color: color, size: 20),
+                      icon: Icon(
+                        Icons.volume_up_rounded,
+                        color: color,
+                        size: 20,
+                      ),
                       tooltip: 'Audition ${p.name}',
                       onPressed: () => onPreview!(p),
                     ),

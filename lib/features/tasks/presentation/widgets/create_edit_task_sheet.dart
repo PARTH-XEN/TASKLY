@@ -181,7 +181,9 @@ class _CreateEditTaskSheetState extends ConsumerState<CreateEditTaskSheet> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -249,12 +251,27 @@ class _CreateEditTaskSheetState extends ConsumerState<CreateEditTaskSheet> {
                           prefixIcon: Icon(Icons.category_outlined),
                         ),
                         items: const [
-                          DropdownMenuItem(value: 'personal', child: Text('Personal')),
+                          DropdownMenuItem(
+                            value: 'personal',
+                            child: Text('Personal'),
+                          ),
                           DropdownMenuItem(value: 'work', child: Text('Work')),
-                          DropdownMenuItem(value: 'study', child: Text('Study')),
-                          DropdownMenuItem(value: 'health', child: Text('Health')),
-                          DropdownMenuItem(value: 'projects', child: Text('Projects')),
-                          DropdownMenuItem(value: 'other', child: Text('Other')),
+                          DropdownMenuItem(
+                            value: 'study',
+                            child: Text('Study'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'health',
+                            child: Text('Health'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'projects',
+                            child: Text('Projects'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'other',
+                            child: Text('Other'),
+                          ),
                         ],
                         onChanged: (val) {
                           if (val != null) setState(() => _category = val);
@@ -291,7 +308,10 @@ class _CreateEditTaskSheetState extends ConsumerState<CreateEditTaskSheet> {
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        icon: const Icon(Icons.calendar_today_rounded, size: 18),
+                        icon: const Icon(
+                          Icons.calendar_today_rounded,
+                          size: 18,
+                        ),
                         label: Text(
                           _dueDate == null
                               ? 'Due Date'
@@ -312,7 +332,9 @@ class _CreateEditTaskSheetState extends ConsumerState<CreateEditTaskSheet> {
                       child: OutlinedButton.icon(
                         icon: const Icon(Icons.access_time_rounded, size: 18),
                         label: Text(
-                          _dueTime == null ? 'Due Time' : _dueTime!.format(context),
+                          _dueTime == null
+                              ? 'Due Time'
+                              : _dueTime!.format(context),
                         ),
                         onPressed: _selectDueTime,
                       ),
@@ -333,7 +355,9 @@ class _CreateEditTaskSheetState extends ConsumerState<CreateEditTaskSheet> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.indigoLight,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.md,
+                    ),
                   ),
                   child: _isSaving
                       ? const SizedBox(

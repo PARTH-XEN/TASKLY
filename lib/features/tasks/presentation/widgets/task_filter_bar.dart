@@ -61,8 +61,8 @@ class TaskFilterBar extends StatelessWidget {
                     color: isSelected
                         ? Colors.white
                         : (isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary),
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary),
                   ),
                   label: Text(item.$2),
                   selected: isSelected,
@@ -76,13 +76,15 @@ class TaskFilterBar extends StatelessWidget {
                     color: isSelected
                         ? Colors.white
                         : (isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.lightTextPrimary),
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary),
                   ),
                   side: BorderSide(
                     color: isSelected
                         ? AppColors.indigoLight
-                        : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                        : (isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder),
                   ),
                   onSelected: (selected) {
                     if (selected) onFilterChanged(item.$1);
@@ -100,7 +102,8 @@ class TaskFilterBar extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           child: Row(
             children: categories.map((cat) {
-              final isSelected = selectedCategory == cat.$1 ||
+              final isSelected =
+                  selectedCategory == cat.$1 ||
                   (selectedCategory == null && cat.$1 == null);
               return Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.xs),
@@ -112,17 +115,21 @@ class TaskFilterBar extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                   labelStyle: TextStyle(
                     fontSize: 11,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                     color: isSelected
                         ? AppColors.indigoLight
                         : (isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary),
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary),
                   ),
                   side: BorderSide(
                     color: isSelected
                         ? AppColors.indigoLight
-                        : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                        : (isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder),
                   ),
                   onSelected: (_) => onCategoryChanged(cat.$1),
                 ),

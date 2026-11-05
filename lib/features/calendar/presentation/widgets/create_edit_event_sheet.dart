@@ -12,11 +12,7 @@ class CreateEditEventSheet extends ConsumerStatefulWidget {
   final CalendarEvent? eventToEdit;
   final DateTime? initialDate;
 
-  const CreateEditEventSheet({
-    super.key,
-    this.eventToEdit,
-    this.initialDate,
-  });
+  const CreateEditEventSheet({super.key, this.eventToEdit, this.initialDate});
 
   @override
   ConsumerState<CreateEditEventSheet> createState() =>
@@ -109,7 +105,8 @@ class _CreateEditEventSheetState extends ConsumerState<CreateEditEventSheet> {
   Future<void> _selectEndTime() async {
     final picked = await showTimePicker(
       context: context,
-      initialTime: _endTime ??
+      initialTime:
+          _endTime ??
           TimeOfDay(
             hour: (_startTime?.hour ?? 9) + 1,
             minute: _startTime?.minute ?? 0,
@@ -220,7 +217,9 @@ class _CreateEditEventSheetState extends ConsumerState<CreateEditEventSheet> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -304,7 +303,9 @@ class _CreateEditEventSheetState extends ConsumerState<CreateEditEventSheet> {
                       child: OutlinedButton.icon(
                         icon: const Icon(Icons.timer_outlined, size: 18),
                         label: Text(
-                          _endTime == null ? 'End Time' : _endTime!.format(context),
+                          _endTime == null
+                              ? 'End Time'
+                              : _endTime!.format(context),
                         ),
                         onPressed: _selectEndTime,
                       ),
@@ -331,7 +332,8 @@ class _CreateEditEventSheetState extends ConsumerState<CreateEditEventSheet> {
                         children: _colorPalette.map((colorVal) {
                           final isSelected = _categoryColor == colorVal;
                           return InkWell(
-                            onTap: () => setState(() => _categoryColor = colorVal),
+                            onTap: () =>
+                                setState(() => _categoryColor = colorVal),
                             borderRadius: BorderRadius.circular(16),
                             child: Container(
                               width: 28,
@@ -375,13 +377,15 @@ class _CreateEditEventSheetState extends ConsumerState<CreateEditEventSheet> {
                     color: _hasAlarm
                         ? AppColors.primaryIndigo.withValues(alpha: 0.12)
                         : (isDark
-                            ? AppColors.darkSurfaceElevated
-                            : AppColors.lightSurfaceElevated),
+                              ? AppColors.darkSurfaceElevated
+                              : AppColors.lightSurfaceElevated),
                     borderRadius: AppRadius.roundedMd,
                     border: Border.all(
                       color: _hasAlarm
                           ? AppColors.indigoLight
-                          : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                          : (isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder),
                     ),
                   ),
                   child: SwitchListTile.adaptive(
@@ -393,8 +397,8 @@ class _CreateEditEventSheetState extends ConsumerState<CreateEditEventSheet> {
                       color: _hasAlarm
                           ? AppColors.indigoLight
                           : (isDark
-                              ? AppColors.darkTextTertiary
-                              : AppColors.lightTextTertiary),
+                                ? AppColors.darkTextTertiary
+                                : AppColors.lightTextTertiary),
                     ),
                     title: Text(
                       'Spoken Alarm Reminder (USP)',
@@ -425,7 +429,9 @@ class _CreateEditEventSheetState extends ConsumerState<CreateEditEventSheet> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.indigoLight,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.md,
+                    ),
                   ),
                   child: _isSaving
                       ? const SizedBox(

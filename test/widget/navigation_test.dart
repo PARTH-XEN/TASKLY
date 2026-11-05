@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:taskly/core/router/app_router.dart';
 import 'package:taskly/core/theme/app_theme.dart';
+import 'package:taskly/features/calendar/presentation/calendar_screen.dart';
 import 'package:taskly/features/reminders/data/reminders_repository.dart';
+import 'package:taskly/features/tasks/presentation/tasks_screen.dart';
+import 'package:taskly/features/wishlist/presentation/wishlist_screen.dart';
 
 void main() {
   testWidgets('Navigation shell displays 5 destinations and FAB', (
@@ -57,7 +60,7 @@ void main() {
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('Task Management'), findsOneWidget);
+    expect(find.byType(TasksScreen), findsOneWidget);
 
     // Tap on Calendar tab
     await tester.tap(
@@ -65,7 +68,7 @@ void main() {
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('Calendar & Events'), findsOneWidget);
+    expect(find.byType(CalendarScreen), findsOneWidget);
 
     // Tap on Wishlist tab
     await tester.tap(
@@ -73,7 +76,7 @@ void main() {
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('Personal Wishlist'), findsOneWidget);
+    expect(find.byType(WishlistScreen), findsOneWidget);
 
     // Tap on Profile tab
     await tester.tap(

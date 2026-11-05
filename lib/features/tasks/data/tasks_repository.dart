@@ -24,11 +24,11 @@ class TaskStats {
   });
 
   factory TaskStats.empty() => const TaskStats(
-        totalCount: 0,
-        completedCount: 0,
-        pendingCount: 0,
-        completionRate: 0.0,
-      );
+    totalCount: 0,
+    completedCount: 0,
+    pendingCount: 0,
+    completionRate: 0.0,
+  );
 }
 
 final tasksRepositoryProvider = Provider<TasksRepository>((ref) {
@@ -45,7 +45,11 @@ final filteredTasksStreamProvider = StreamProvider<List<Task>>((ref) {
   final filter = ref.watch(taskFilterProvider);
   final category = ref.watch(taskCategoryFilterProvider);
   final query = ref.watch(taskSearchQueryProvider);
-  return repo.watchTasks(filter: filter, category: category, searchQuery: query);
+  return repo.watchTasks(
+    filter: filter,
+    category: category,
+    searchQuery: query,
+  );
 });
 
 final taskStatsStreamProvider = StreamProvider<TaskStats>((ref) {
@@ -80,7 +84,9 @@ class TasksRepository {
 
         // Category filter
         if (category != null && category.isNotEmpty && category != 'all') {
-          if (task.category.toLowerCase() != category.toLowerCase()) return false;
+          if (task.category.toLowerCase() != category.toLowerCase()) {
+            return false;
+          }
         }
 
         // Status/Time filter
@@ -92,8 +98,12 @@ class TasksRepository {
           case TaskFilter.today:
             if (task.isCompleted) return false;
             if (task.dueDate == null) return false;
-            return task.dueDate!.isAfter(todayStart.subtract(const Duration(seconds: 1))) &&
-                task.dueDate!.isBefore(todayEnd.add(const Duration(seconds: 1)));
+            return task.dueDate!.isAfter(
+                  todayStart.subtract(const Duration(seconds: 1)),
+                ) &&
+                task.dueDate!.isBefore(
+                  todayEnd.add(const Duration(seconds: 1)),
+                );
           case TaskFilter.upcoming:
             if (task.isCompleted) return false;
             if (task.dueDate == null) return true;
@@ -103,24 +113,23 @@ class TasksRepository {
             if (task.dueDate == null) return false;
             return task.dueDate!.isBefore(todayStart);
         }
-      }).toList()
-        ..sort((a, b) {
-          // Incompleted tasks first, then by priority (high > medium > low), then by dueDate
-          if (a.isCompleted != b.isCompleted) {
-            return a.isCompleted ? 1 : -1;
-          }
-          final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
-          final pA = priorityOrder[a.priority.toLowerCase()] ?? 1;
-          final pB = priorityOrder[b.priority.toLowerCase()] ?? 1;
-          if (pA != pB) return pA.compareTo(pB);
+      }).toList()..sort((a, b) {
+        // Incompleted tasks first, then by priority (high > medium > low), then by dueDate
+        if (a.isCompleted != b.isCompleted) {
+          return a.isCompleted ? 1 : -1;
+        }
+        final priorityOrder = {'high': 0, 'medium': 1, 'low': 2};
+        final pA = priorityOrder[a.priority.toLowerCase()] ?? 1;
+        final pB = priorityOrder[b.priority.toLowerCase()] ?? 1;
+        if (pA != pB) return pA.compareTo(pB);
 
-          if (a.dueDate != null && b.dueDate != null) {
-            return a.dueDate!.compareTo(b.dueDate!);
-          }
-          if (a.dueDate != null) return -1;
-          if (b.dueDate != null) return 1;
-          return b.createdAt.compareTo(a.createdAt);
-        });
+        if (a.dueDate != null && b.dueDate != null) {
+          return a.dueDate!.compareTo(b.dueDate!);
+        }
+        if (a.dueDate != null) return -1;
+        if (b.dueDate != null) return 1;
+        return b.createdAt.compareTo(a.createdAt);
+      });
     });
   }
 
@@ -151,7 +160,9 @@ class TasksRepository {
     String? reminderId,
     String? notes,
   }) async {
-    await _db.into(_db.tasks).insert(
+    await _db
+        .into(_db.tasks)
+        .insert(
           TasksCompanion.insert(
             id: id,
             title: title,

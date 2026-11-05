@@ -58,11 +58,13 @@ class WishlistItemCard extends StatelessWidget {
     if (item.targetDate != null) {
       final daysDiff = item.targetDate!.difference(DateTime.now()).inDays;
       if (daysDiff < 0) {
-        targetDateStr = 'Target passed (${DateFormat('MMM d').format(item.targetDate!)})';
+        targetDateStr =
+            'Target passed (${DateFormat('MMM d').format(item.targetDate!)})';
       } else if (daysDiff == 0) {
         targetDateStr = 'Target: Today';
       } else {
-        targetDateStr = '$daysDiff days left (${DateFormat('MMM d').format(item.targetDate!)})';
+        targetDateStr =
+            '$daysDiff days left (${DateFormat('MMM d').format(item.targetDate!)})';
       }
     }
 
@@ -103,8 +105,8 @@ class WishlistItemCard extends StatelessWidget {
                       color: item.isCompleted
                           ? AppColors.successLight
                           : (isDark
-                              ? AppColors.darkTextTertiary
-                              : AppColors.lightTextTertiary),
+                                ? AppColors.darkTextTertiary
+                                : AppColors.lightTextTertiary),
                       width: 2,
                     ),
                   ),
@@ -133,11 +135,11 @@ class WishlistItemCard extends StatelessWidget {
                             : null,
                         color: item.isCompleted
                             ? (isDark
-                                ? AppColors.darkTextTertiary
-                                : AppColors.lightTextTertiary)
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextTertiary)
                             : (isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary),
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary),
                       ),
                     ),
                     if (item.description != null &&

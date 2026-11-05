@@ -147,7 +147,9 @@ class _CreateEditWishlistSheetState
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -216,10 +218,22 @@ class _CreateEditWishlistSheetState
                         ),
                         items: const [
                           DropdownMenuItem(value: 'goal', child: Text('Goal')),
-                          DropdownMenuItem(value: 'product', child: Text('Product')),
-                          DropdownMenuItem(value: 'skill', child: Text('Skill')),
-                          DropdownMenuItem(value: 'project', child: Text('Project')),
-                          DropdownMenuItem(value: 'travel', child: Text('Travel')),
+                          DropdownMenuItem(
+                            value: 'product',
+                            child: Text('Product'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'skill',
+                            child: Text('Skill'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'project',
+                            child: Text('Project'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'travel',
+                            child: Text('Travel'),
+                          ),
                         ],
                         onChanged: (val) {
                           if (val != null) setState(() => _category = val);
@@ -282,7 +296,9 @@ class _CreateEditWishlistSheetState
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.indigoLight,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.md,
+                    ),
                   ),
                   child: _isSaving
                       ? const SizedBox(
