@@ -6,6 +6,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/theme_provider.dart';
 import '../../../services/permission_service.dart';
+import '../../../services/update_service.dart';
 import '../../reminders/data/reminders_repository.dart';
 import '../data/settings_repository.dart';
 
@@ -478,6 +479,7 @@ class SettingsScreen extends ConsumerWidget {
 
           // About Section
           const _SettingsSectionHeader(title: 'About TASKLY'),
+          _CheckForUpdateTile(),
           _SettingsTile(
             title: 'Version',
             subtitle: '1.0.0+1 (Offline First • Zero AI APIs)',
@@ -503,6 +505,119 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Check for Update tile — self-contained ConsumerWidget to avoid bloating the
+// main SettingsScreen widget tree.
+// ─────────────────────────────────────────────────────────────────────────────
+class _CheckForUpdateTile extends ConsumerStatefulWidget {
+  @override
+  ConsumerState<_CheckForUpdateTile> createState() =>
+      _CheckForUpdateTileState();
+}
+
+class _CheckForUpdateTileState extends ConsumerState<_CheckForUpdateTile> {
+  bool _checking = false;
+
+  Future<void> _check() async {
+    if (_checking) return;
+    setState(() => _checking = true);
+
+    final service = UpdateService();
+    final info = await service.checkForUpdate();
+
+    if (!mounted) return;
+    setState(() => _checking = false);
+
+    if (info != null) {
+      _showUpdateDialog(info);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('✅ You are on the latest version of TASKLY!'),
+          backgroundColor: AppColors.successLight,
+        ),
+      );
+    }
+  }
+
+  void _showUpdateDialog(UpdateInfo info) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.system_update_rounded, color: AppColors.indigoLight),
+            SizedBox(width: 8),
+            Expanded(child: Text('Update Available')),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Version ${info.version} is available.',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            if (info.releaseNotes.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Text(info.releaseNotes, style: const TextStyle(fontSize: 13)),
+            ],
+            const SizedBox(height: AppSpacing.md),
+            const Text(
+              'Tap "Download" to open the GitHub Release page. After downloading, open the APK to install.',
+              style: TextStyle(fontSize: 12, color: AppColors.darkTextSecondary),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Later'),
+          ),
+          FilledButton.icon(
+            icon: const Icon(Icons.download_rounded),
+            label: const Text('Download'),
+            onPressed: () async {
+              Navigator.pop(ctx);
+              final launched = await UpdateService().launchDownload(
+                info.downloadUrl,
+              );
+              if (!launched && mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Could not open link. Visit github.com to download manually.',
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _SettingsTile(
+      title: 'Check for Update',
+      subtitle: 'Get the latest features and bug fixes',
+      icon: Icons.system_update_rounded,
+      iconColor: AppColors.indigoLight,
+      trailing: _checking
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : null,
+      onTap: _check,
     );
   }
 }

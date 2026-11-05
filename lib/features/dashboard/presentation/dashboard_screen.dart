@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_spacing.dart';
@@ -8,14 +9,15 @@ import 'widgets/greeting_header.dart';
 import 'widgets/next_reminder_card.dart';
 import 'widgets/quick_action_grid.dart';
 import 'widgets/today_summary_card.dart';
+import 'widgets/update_banner.dart';
 import 'widgets/upcoming_events_preview.dart';
 import 'widgets/upcoming_reminders_list.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -30,7 +32,10 @@ class DashboardScreen extends StatelessWidget {
             slivers: [
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
               const SliverToBoxAdapter(child: GreetingHeader()),
-              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
+              // Update banner — hidden when up-to-date or offline
+              const SliverToBoxAdapter(child: UpdateBanner()),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.sm)),
               const SliverToBoxAdapter(child: NextReminderCard()),
               const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
               SliverToBoxAdapter(

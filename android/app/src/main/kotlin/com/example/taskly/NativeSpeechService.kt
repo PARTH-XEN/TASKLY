@@ -416,3 +416,4 @@ class NativeSpeechService : Service(), TextToSpeech.OnInitListener {
         Log.d(TAG, "NativeSpeechService destroyed")
     }
 }
+
