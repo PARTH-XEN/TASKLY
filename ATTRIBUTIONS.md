@@ -41,3 +41,4 @@ TASKLY is built exclusively with free, open-source, and permissively licensed so
 - Zero Paid APIs (OpenAI, Gemini, Anthropic, ElevenLabs, etc.) are included or required.
 - All voice functionality uses local Android Text-To-Speech engines via `flutter_tts`.
 - All data storage is stored on-device in local SQLite via `drift`.
+

@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/theme/app_colors.dart';
+
 import 'quick_action_sheet.dart';
 
 /// Main scaffold shell wrapping the 5 tabs with persistent state and quick action button.
 class MainScaffoldShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
-  const MainScaffoldShell({
-    super.key,
-    required this.navigationShell,
-  });
+  const MainScaffoldShell({super.key, required this.navigationShell});
 
   void _onDestinationSelected(int index) {
     HapticFeedback.selectionClick();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 
@@ -18,16 +19,15 @@ class UpcomingRemindersList extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Upcoming Reminders',
-                style: theme.textTheme.titleLarge,
-              ),
+              Text('Upcoming Reminders', style: theme.textTheme.titleLarge),
               TextButton(
                 onPressed: () {},
                 child: Text(
                   'See all',
                   style: TextStyle(
-                    color: isDark ? AppColors.indigoLight : AppColors.indigoDark,
+                    color: isDark
+                        ? AppColors.indigoLight
+                        : AppColors.indigoDark,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -101,7 +101,11 @@ class _ReminderItemTile extends StatelessWidget {
                 color: voiceColor.withValues(alpha: 0.15),
                 borderRadius: AppRadius.roundedMd,
               ),
-              child: Icon(Icons.record_voice_over_rounded, color: voiceColor, size: 20),
+              child: Icon(
+                Icons.record_voice_over_rounded,
+                color: voiceColor,
+                size: 20,
+              ),
             ),
             const SizedBox(width: AppSpacing.md),
             Expanded(
@@ -117,17 +121,16 @@ class _ReminderItemTile extends StatelessWidget {
                   const SizedBox(height: 2),
                   Row(
                     children: [
-                      Text(
-                        timeText,
-                        style: theme.textTheme.bodySmall,
-                      ),
+                      Text(timeText, style: theme.textTheme.bodySmall),
                       const SizedBox(width: 6),
                       Text('•', style: theme.textTheme.bodySmall),
                       const SizedBox(width: 6),
                       Text(
                         repeatText,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: isDark ? AppColors.indigoLight : AppColors.indigoDark,
+                          color: isDark
+                              ? AppColors.indigoLight
+                              : AppColors.indigoDark,
                         ),
                       ),
                     ],

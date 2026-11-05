@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 
@@ -11,9 +12,7 @@ class WishlistScreen extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Wishlist & Goals'),
-      ),
+      appBar: AppBar(title: const Text('Wishlist & Goals')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xl),
@@ -34,16 +33,15 @@ class WishlistScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text(
-                'Personal Wishlist',
-                style: theme.textTheme.headlineSmall,
-              ),
+              Text('Personal Wishlist', style: theme.textTheme.headlineSmall),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Save products, skills to learn, and places to visit. Scheduled for Phase 4.',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ],

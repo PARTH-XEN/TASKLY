@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 
@@ -46,16 +47,15 @@ class TasksScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text(
-                'Task Management',
-                style: theme.textTheme.headlineSmall,
-              ),
+              Text('Task Management', style: theme.textTheme.headlineSmall),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Organize your to-dos by priority and category. Scheduled for Phase 4.',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ],

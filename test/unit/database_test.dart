@@ -22,7 +22,9 @@ void main() {
       final reminderId = uuid.v4();
       final scheduledTime = DateTime.now().add(const Duration(hours: 2));
 
-      await database.into(database.reminders).insert(
+      await database
+          .into(database.reminders)
+          .insert(
             RemindersCompanion.insert(
               id: reminderId,
               title: 'Study Flutter',
@@ -48,7 +50,9 @@ void main() {
     test('Can insert, update, and complete tasks', () async {
       final taskId = uuid.v4();
 
-      await database.into(database.tasks).insert(
+      await database
+          .into(database.tasks)
+          .insert(
             TasksCompanion.insert(
               id: taskId,
               title: 'Build TASKLY Navigation Shell',
@@ -75,7 +79,9 @@ void main() {
       final date = DateTime.now().add(const Duration(days: 5));
 
       // Event A: Exam without alarm
-      await database.into(database.calendarEvents).insert(
+      await database
+          .into(database.calendarEvents)
+          .insert(
             CalendarEventsCompanion.insert(
               id: eventAId,
               title: 'College Examination',
@@ -86,7 +92,9 @@ void main() {
           );
 
       // Event B: Submission with alarm
-      await database.into(database.calendarEvents).insert(
+      await database
+          .into(database.calendarEvents)
+          .insert(
             CalendarEventsCompanion.insert(
               id: eventBId,
               title: 'Project Submission',
@@ -95,25 +103,24 @@ void main() {
             ),
           );
 
-      final eventsWithAlarm = await (database.select(database.calendarEvents)
-            ..where((tbl) => tbl.hasAlarm.equals(true)))
-          .get();
+      final eventsWithAlarm = await (database.select(
+        database.calendarEvents,
+      )..where((tbl) => tbl.hasAlarm.equals(true))).get();
 
       expect(eventsWithAlarm.length, equals(1));
       expect(eventsWithAlarm.first.title, equals('Project Submission'));
     });
 
     test('Can persist and update app settings key-value pairs', () async {
-      await database.into(database.appSettings).insert(
-            AppSettingsCompanion.insert(
-              key: 'default_voice',
-              value: 'nova',
-            ),
+      await database
+          .into(database.appSettings)
+          .insert(
+            AppSettingsCompanion.insert(key: 'default_voice', value: 'nova'),
           );
 
-      final setting = await (database.select(database.appSettings)
-            ..where((tbl) => tbl.key.equals('default_voice')))
-          .getSingle();
+      final setting = await (database.select(
+        database.appSettings,
+      )..where((tbl) => tbl.key.equals('default_voice'))).getSingle();
 
       expect(setting.value, equals('nova'));
     });

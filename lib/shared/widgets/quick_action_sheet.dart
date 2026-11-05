@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 
@@ -25,7 +26,9 @@ class QuickActionSheet extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xxl)),
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(AppRadius.xxl),
+        ),
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           width: 1,
@@ -47,7 +50,9 @@ class QuickActionSheet extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkTextTertiary : AppColors.lightBorder,
+                color: isDark
+                    ? AppColors.darkTextTertiary
+                    : AppColors.lightBorder,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -55,10 +60,7 @@ class QuickActionSheet extends StatelessWidget {
           const SizedBox(height: AppSpacing.lg),
           Row(
             children: [
-              Text(
-                'Create New',
-                style: theme.textTheme.headlineSmall,
-              ),
+              Text('Create New', style: theme.textTheme.headlineSmall),
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.close, size: 20),
@@ -79,7 +81,9 @@ class QuickActionSheet extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Spoken Reminder creation ready for Phase 2')),
+                const SnackBar(
+                  content: Text('Spoken Reminder creation ready for Phase 2'),
+                ),
               );
             },
           ),
@@ -94,7 +98,9 @@ class QuickActionSheet extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Task creation ready for Phase 4')),
+                const SnackBar(
+                  content: Text('Task creation ready for Phase 4'),
+                ),
               );
             },
           ),
@@ -109,7 +115,9 @@ class QuickActionSheet extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Calendar event ready for Phase 4')),
+                const SnackBar(
+                  content: Text('Calendar event ready for Phase 4'),
+                ),
               );
             },
           ),
@@ -124,7 +132,9 @@ class QuickActionSheet extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Wishlist item ready for Phase 4')),
+                const SnackBar(
+                  content: Text('Wishlist item ready for Phase 4'),
+                ),
               );
             },
           ),
@@ -167,7 +177,9 @@ class _ActionCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(AppSpacing.md),
           decoration: BoxDecoration(
-            color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+            color: isDark
+                ? AppColors.darkSurfaceElevated
+                : AppColors.lightSurfaceElevated,
             borderRadius: AppRadius.roundedLg,
             border: Border.all(
               color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -201,9 +213,14 @@ class _ActionCard extends StatelessWidget {
                         if (badge != null) ...[
                           const SizedBox(width: AppSpacing.xs),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
-                              color: AppColors.indigoLight.withValues(alpha: 0.2),
+                              color: AppColors.indigoLight.withValues(
+                                alpha: 0.2,
+                              ),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
@@ -218,10 +235,7 @@ class _ActionCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: theme.textTheme.bodySmall,
-                    ),
+                    Text(subtitle, style: theme.textTheme.bodySmall),
                   ],
                 ),
               ),

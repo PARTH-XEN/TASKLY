@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 
@@ -11,9 +12,7 @@ class SettingsScreen extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile & Settings'),
-      ),
+      appBar: AppBar(title: const Text('Profile & Settings')),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
@@ -79,14 +78,17 @@ class _SettingsSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm, left: AppSpacing.xs),
+      padding: const EdgeInsets.only(
+        bottom: AppSpacing.sm,
+        left: AppSpacing.xs,
+      ),
       child: Text(
         title.toUpperCase(),
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              letterSpacing: 1.2,
-              fontWeight: FontWeight.bold,
-              color: AppColors.indigoLight,
-            ),
+          letterSpacing: 1.2,
+          fontWeight: FontWeight.bold,
+          color: AppColors.indigoLight,
+        ),
       ),
     );
   }
@@ -115,7 +117,10 @@ class _SettingsTile extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 4),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: 4,
+        ),
         leading: Container(
           width: 40,
           height: 40,
@@ -129,7 +134,9 @@ class _SettingsTile extends StatelessWidget {
         subtitle: Text(
           subtitle,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
           ),
         ),
         trailing: const Icon(Icons.chevron_right_rounded, size: 20),

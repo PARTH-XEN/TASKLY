@@ -27,8 +27,8 @@ abstract class AppColors {
 
   // Voice Personality signature colors
   static const Color voiceNova = Color(0xFF818CF8); // Friendly indigo
-  static const Color voiceMax = Color(0xFFF97316);  // Energetic orange
-  static const Color voiceAtlas = Color(0xFF0284C7);// Professional blue
+  static const Color voiceMax = Color(0xFFF97316); // Energetic orange
+  static const Color voiceAtlas = Color(0xFF0284C7); // Professional blue
   static const Color voiceEcho = Color(0xFF10B981); // Simple emerald
 
   // Dark Theme Colors

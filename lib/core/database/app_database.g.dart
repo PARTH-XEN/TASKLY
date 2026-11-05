@@ -3960,44 +3960,42 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   ];
 }
 
-typedef $$RemindersTableCreateCompanionBuilder =
-    RemindersCompanion Function({
-      required String id,
-      required String title,
-      Value<String?> description,
-      required DateTime scheduledAt,
-      Value<int?> relativeDurationMinutes,
-      Value<String> voicePersonality,
-      Value<String?> ttsVoiceName,
-      Value<double> speechRate,
-      Value<double> speechPitch,
-      Value<String> repeatFrequency,
-      Value<String?> customSpokenMessage,
-      Value<bool> isEnabled,
-      Value<bool> isSpokenEnabled,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
-typedef $$RemindersTableUpdateCompanionBuilder =
-    RemindersCompanion Function({
-      Value<String> id,
-      Value<String> title,
-      Value<String?> description,
-      Value<DateTime> scheduledAt,
-      Value<int?> relativeDurationMinutes,
-      Value<String> voicePersonality,
-      Value<String?> ttsVoiceName,
-      Value<double> speechRate,
-      Value<double> speechPitch,
-      Value<String> repeatFrequency,
-      Value<String?> customSpokenMessage,
-      Value<bool> isEnabled,
-      Value<bool> isSpokenEnabled,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
+typedef $$RemindersTableCreateCompanionBuilder = RemindersCompanion Function({
+  required String id,
+  required String title,
+  Value<String?> description,
+  required DateTime scheduledAt,
+  Value<int?> relativeDurationMinutes,
+  Value<String> voicePersonality,
+  Value<String?> ttsVoiceName,
+  Value<double> speechRate,
+  Value<double> speechPitch,
+  Value<String> repeatFrequency,
+  Value<String?> customSpokenMessage,
+  Value<bool> isEnabled,
+  Value<bool> isSpokenEnabled,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+typedef $$RemindersTableUpdateCompanionBuilder = RemindersCompanion Function({
+  Value<String> id,
+  Value<String> title,
+  Value<String?> description,
+  Value<DateTime> scheduledAt,
+  Value<int?> relativeDurationMinutes,
+  Value<String> voicePersonality,
+  Value<String?> ttsVoiceName,
+  Value<double> speechRate,
+  Value<double> speechPitch,
+  Value<String> repeatFrequency,
+  Value<String?> customSpokenMessage,
+  Value<bool> isEnabled,
+  Value<bool> isSpokenEnabled,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
 
 class $$RemindersTableFilterComposer
     extends Composer<_$AppDatabase, $RemindersTable> {
@@ -4364,38 +4362,36 @@ typedef $$RemindersTableProcessedTableManager =
       Reminder,
       PrefetchHooks Function()
     >;
-typedef $$TasksTableCreateCompanionBuilder =
-    TasksCompanion Function({
-      required String id,
-      required String title,
-      Value<String?> description,
-      Value<String> category,
-      Value<String> priority,
-      Value<DateTime?> dueDate,
-      Value<String?> dueTime,
-      Value<bool> isCompleted,
-      Value<String?> reminderId,
-      Value<String?> notes,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
-typedef $$TasksTableUpdateCompanionBuilder =
-    TasksCompanion Function({
-      Value<String> id,
-      Value<String> title,
-      Value<String?> description,
-      Value<String> category,
-      Value<String> priority,
-      Value<DateTime?> dueDate,
-      Value<String?> dueTime,
-      Value<bool> isCompleted,
-      Value<String?> reminderId,
-      Value<String?> notes,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
+typedef $$TasksTableCreateCompanionBuilder = TasksCompanion Function({
+  required String id,
+  required String title,
+  Value<String?> description,
+  Value<String> category,
+  Value<String> priority,
+  Value<DateTime?> dueDate,
+  Value<String?> dueTime,
+  Value<bool> isCompleted,
+  Value<String?> reminderId,
+  Value<String?> notes,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+typedef $$TasksTableUpdateCompanionBuilder = TasksCompanion Function({
+  Value<String> id,
+  Value<String> title,
+  Value<String?> description,
+  Value<String> category,
+  Value<String> priority,
+  Value<DateTime?> dueDate,
+  Value<String?> dueTime,
+  Value<bool> isCompleted,
+  Value<String?> reminderId,
+  Value<String?> notes,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
 
 class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
   $$TasksTableFilterComposer({
@@ -5850,12 +5846,11 @@ class $$AppSettingsTableTableManager
               $$AppSettingsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$AppSettingsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> key = const Value.absent(),
-                Value<String> value = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => AppSettingsCompanion(key: key, value: value, rowid: rowid),
+          updateCompanionCallback: ({
+            Value<String> key = const Value.absent(),
+            Value<String> value = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) => AppSettingsCompanion(key: key, value: value, rowid: rowid),
           createCompanionCallback:
               ({
                 required String key,

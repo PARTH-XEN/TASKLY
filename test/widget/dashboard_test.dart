@@ -6,12 +6,11 @@ import 'package:taskly/features/dashboard/presentation/widgets/next_reminder_car
 import 'package:taskly/features/dashboard/presentation/widgets/today_summary_card.dart';
 
 void main() {
-  testWidgets('Dashboard renders greeting, next reminder USP, and summary', (WidgetTester tester) async {
+  testWidgets('Dashboard renders greeting, next reminder USP, and summary', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.darkTheme,
-        home: const DashboardScreen(),
-      ),
+      MaterialApp(theme: AppTheme.darkTheme, home: const DashboardScreen()),
     );
     await tester.pumpAndSettle();
 
@@ -22,7 +21,10 @@ void main() {
     final reminderCardFinder = find.byType(NextReminderCard);
     expect(reminderCardFinder, findsOneWidget);
     expect(find.text('NEXT SPOKEN REMINDER'), findsOneWidget);
-    expect(find.descendant(of: reminderCardFinder, matching: find.text('Nova')), findsOneWidget);
+    expect(
+      find.descendant(of: reminderCardFinder, matching: find.text('Nova')),
+      findsOneWidget,
+    );
     expect(find.text('Study Flutter Architecture'), findsWidgets);
 
     // Verify Today Summary Card

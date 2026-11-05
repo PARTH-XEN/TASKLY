@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/quick_action_sheet.dart';
 import 'widgets/greeting_header.dart';
@@ -25,21 +26,11 @@ class DashboardScreen extends StatelessWidget {
               parent: BouncingScrollPhysics(),
             ),
             slivers: [
-              const SliverToBoxAdapter(
-                child: SizedBox(height: AppSpacing.md),
-              ),
-              const SliverToBoxAdapter(
-                child: GreetingHeader(),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: AppSpacing.lg),
-              ),
-              const SliverToBoxAdapter(
-                child: NextReminderCard(),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: AppSpacing.lg),
-              ),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
+              const SliverToBoxAdapter(child: GreetingHeader()),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+              const SliverToBoxAdapter(child: NextReminderCard()),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
               SliverToBoxAdapter(
                 child: QuickActionGrid(
                   onNewReminder: () => QuickActionSheet.show(context),
@@ -47,25 +38,21 @@ class DashboardScreen extends StatelessWidget {
                   onCalendar: () => context.go('/calendar'),
                   onFocus: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Focus timer coming in Phase 5')),
+                      const SnackBar(
+                        content: Text('Focus timer coming in Phase 5'),
+                      ),
                     );
                   },
                 ),
               ),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+              const SliverToBoxAdapter(child: TodaySummaryCard()),
+              const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+              const SliverToBoxAdapter(child: UpcomingRemindersList()),
               const SliverToBoxAdapter(
-                child: SizedBox(height: AppSpacing.lg),
-              ),
-              const SliverToBoxAdapter(
-                child: TodaySummaryCard(),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: AppSpacing.lg),
-              ),
-              const SliverToBoxAdapter(
-                child: UpcomingRemindersList(),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 100), // Bottom padding for FAB and navigation bar
+                child: SizedBox(
+                  height: 100,
+                ), // Bottom padding for FAB and navigation bar
               ),
             ],
           ),

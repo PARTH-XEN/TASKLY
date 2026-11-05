@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 
@@ -41,16 +42,15 @@ class CalendarScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text(
-                'Calendar & Events',
-                style: theme.textTheme.headlineSmall,
-              ),
+              Text('Calendar & Events', style: theme.textTheme.headlineSmall),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 'Track dates and exams with clear alarm toggles. Scheduled for Phase 4.',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ],

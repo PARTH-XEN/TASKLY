@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 
@@ -38,7 +39,9 @@ class GreetingHeader extends StatelessWidget {
                   style: theme.textTheme.labelSmall?.copyWith(
                     letterSpacing: 1.2,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.indigoLight : AppColors.indigoDark,
+                    color: isDark
+                        ? AppColors.indigoLight
+                        : AppColors.indigoDark,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -54,7 +57,9 @@ class GreetingHeader extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+              color: isDark
+                  ? AppColors.darkSurfaceElevated
+                  : AppColors.lightSurfaceElevated,
               borderRadius: AppRadius.roundedFull,
               border: Border.all(
                 color: isDark ? AppColors.darkBorder : AppColors.lightBorder,

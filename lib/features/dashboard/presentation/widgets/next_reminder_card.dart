@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 
@@ -49,7 +50,9 @@ class NextReminderCard extends StatelessWidget {
         ),
         borderRadius: AppRadius.roundedXl,
         border: Border.all(
-          color: isDark ? AppColors.indigoLight.withValues(alpha: 0.3) : AppColors.indigoDark.withValues(alpha: 0.2),
+          color: isDark
+              ? AppColors.indigoLight.withValues(alpha: 0.3)
+              : AppColors.indigoDark.withValues(alpha: 0.2),
           width: 1.5,
         ),
         boxShadow: [
@@ -75,7 +78,11 @@ class NextReminderCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.bolt_rounded, size: 14, color: AppColors.indigoLight),
+                    const Icon(
+                      Icons.bolt_rounded,
+                      size: 14,
+                      color: AppColors.indigoLight,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       'NEXT SPOKEN REMINDER',
@@ -90,7 +97,10 @@ class NextReminderCard extends StatelessWidget {
               ),
               const Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: voiceColor.withValues(alpha: 0.15),
                   borderRadius: AppRadius.roundedFull,
@@ -125,13 +135,19 @@ class NextReminderCard extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: [
-              const Icon(Icons.access_time_rounded, size: 15, color: AppColors.indigoLight),
+              const Icon(
+                Icons.access_time_rounded,
+                size: 15,
+                color: AppColors.indigoLight,
+              ),
               const SizedBox(width: 6),
               Text(
                 scheduledTimeText,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ],
@@ -162,7 +178,9 @@ class NextReminderCard extends StatelessWidget {
                     spokenMessage,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontStyle: FontStyle.italic,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                 ),

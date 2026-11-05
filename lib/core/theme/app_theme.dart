@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'app_colors.dart';
 import 'app_spacing.dart';
 import 'app_typography.dart';
@@ -56,7 +57,10 @@ abstract class AppTheme {
           if (states.contains(WidgetState.selected)) {
             return const IconThemeData(color: AppColors.indigoLight, size: 24);
           }
-          return const IconThemeData(color: AppColors.darkTextTertiary, size: 24);
+          return const IconThemeData(
+            color: AppColors.darkTextTertiary,
+            size: 24,
+          );
         }),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
@@ -102,7 +106,10 @@ abstract class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.darkSurfaceElevated,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: AppRadius.roundedMd,
           borderSide: const BorderSide(color: AppColors.darkBorder),
@@ -113,13 +120,19 @@ abstract class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.roundedMd,
-          borderSide: const BorderSide(color: AppColors.indigoLight, width: 1.5),
+          borderSide: const BorderSide(
+            color: AppColors.indigoLight,
+            width: 1.5,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadius.roundedMd,
           borderSide: const BorderSide(color: AppColors.dangerLight),
         ),
-        hintStyle: const TextStyle(color: AppColors.darkTextTertiary, fontSize: 14),
+        hintStyle: const TextStyle(
+          color: AppColors.darkTextTertiary,
+          fontSize: 14,
+        ),
       ),
       dividerTheme: const DividerThemeData(
         color: AppColors.darkBorder,
@@ -179,7 +192,10 @@ abstract class AppTheme {
           if (states.contains(WidgetState.selected)) {
             return const IconThemeData(color: AppColors.indigoDark, size: 24);
           }
-          return const IconThemeData(color: AppColors.lightTextTertiary, size: 24);
+          return const IconThemeData(
+            color: AppColors.lightTextTertiary,
+            size: 24,
+          );
         }),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
@@ -225,7 +241,10 @@ abstract class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.lightSurfaceElevated,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: AppRadius.roundedMd,
           borderSide: const BorderSide(color: AppColors.lightBorder),
@@ -242,7 +261,10 @@ abstract class AppTheme {
           borderRadius: AppRadius.roundedMd,
           borderSide: const BorderSide(color: AppColors.dangerDark),
         ),
-        hintStyle: const TextStyle(color: AppColors.lightTextTertiary, fontSize: 14),
+        hintStyle: const TextStyle(
+          color: AppColors.lightTextTertiary,
+          fontSize: 14,
+        ),
       ),
       dividerTheme: const DividerThemeData(
         color: AppColors.lightBorder,

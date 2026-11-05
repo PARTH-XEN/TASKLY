@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 
@@ -31,12 +32,12 @@ class TodaySummaryCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Today's Overview",
-                    style: theme.textTheme.titleLarge,
-                  ),
+                  Text("Today's Overview", style: theme.textTheme.titleLarge),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.successLight.withValues(alpha: 0.15),
                       borderRadius: AppRadius.roundedSm,
@@ -44,7 +45,9 @@ class TodaySummaryCard extends StatelessWidget {
                     child: Text(
                       '$percentage% DONE',
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: isDark ? AppColors.successLight : AppColors.successDark,
+                        color: isDark
+                            ? AppColors.successLight
+                            : AppColors.successDark,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -57,8 +60,12 @@ class TodaySummaryCard extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: completionRate,
                   minHeight: 8,
-                  backgroundColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
-                  valueColor: const AlwaysStoppedAnimation<Color>(AppColors.successLight),
+                  backgroundColor: isDark
+                      ? AppColors.darkSurfaceElevated
+                      : AppColors.lightSurfaceElevated,
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppColors.successLight,
+                  ),
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
@@ -75,7 +82,9 @@ class TodaySummaryCard extends StatelessWidget {
                   Container(
                     height: 36,
                     width: 1,
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                   Expanded(
                     child: _StatTile(
@@ -126,10 +135,7 @@ class _StatTile extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              label,
-              style: theme.textTheme.bodySmall,
-            ),
+            Text(label, style: theme.textTheme.bodySmall),
           ],
         ),
       ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'app_colors.dart';
 
 /// Centralized accessible typography configured for 100% offline-first reliability.
@@ -13,8 +14,12 @@ abstract class AppTypography {
 
   static TextTheme createTextTheme(Brightness brightness) {
     final bool isDark = brightness == Brightness.dark;
-    final Color primaryColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final Color secondaryColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final Color primaryColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final Color secondaryColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return TextTheme(
       displayLarge: TextStyle(

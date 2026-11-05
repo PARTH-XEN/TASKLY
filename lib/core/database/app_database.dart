@@ -11,15 +11,17 @@ import 'tables/wishlist_table.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [
-  Reminders,
-  Tasks,
-  CalendarEvents,
-  WishlistItems,
-  AlarmHistory,
-  FocusSessions,
-  AppSettings,
-])
+@DriftDatabase(
+  tables: [
+    Reminders,
+    Tasks,
+    CalendarEvents,
+    WishlistItems,
+    AlarmHistory,
+    FocusSessions,
+    AppSettings,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? _openConnection());
 
@@ -30,4 +32,3 @@ class AppDatabase extends _$AppDatabase {
     return driftDatabase(name: 'taskly_db');
   }
 }
-
