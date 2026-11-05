@@ -41,7 +41,7 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
   String _selectedPersonality = 'nova';
   final double _speechRate = 0.5;
   final double _speechPitch = 1.0;
-  final String _repeatFrequency = 'none';
+  String _repeatFrequency = 'none';
   bool _isSpokenEnabled = true;
 
   @override
@@ -296,6 +296,47 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
                         ],
                       ),
                     ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+
+                  // Repeat Schedule Selector
+                  Text(
+                    'REPEAT SCHEDULE',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.1,
+                      color: AppColors.indigoLight,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Wrap(
+                    spacing: AppSpacing.xs,
+                    children:
+                        [
+                          ('none', 'Never'),
+                          ('daily', 'Daily'),
+                          ('weekdays', 'Weekdays'),
+                          ('weekly', 'Weekly'),
+                        ].map((freq) {
+                          final isSelected = _repeatFrequency == freq.$1;
+                          return ChoiceChip(
+                            label: Text(freq.$2),
+                            selected: isSelected,
+                            selectedColor: AppColors.indigoLight,
+                            labelStyle: TextStyle(
+                              fontSize: 12,
+                              color: isSelected ? Colors.white : null,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                            onSelected: (val) {
+                              if (val) {
+                                setState(() => _repeatFrequency = freq.$1);
+                              }
+                            },
+                          );
+                        }).toList(),
                   ),
                   const SizedBox(height: AppSpacing.lg),
 

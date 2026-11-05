@@ -171,4 +171,28 @@ class RemindersRepository {
       }
     }
   }
+
+  Future<void> rescheduleReminder({
+    required String id,
+    required DateTime newScheduledAt,
+  }) async {
+    final reminder = await getReminderById(id);
+    if (reminder == null) return;
+
+    await updateReminder(
+      id: id,
+      title: reminder.title,
+      description: reminder.description,
+      scheduledAt: newScheduledAt,
+      relativeDurationMinutes: reminder.relativeDurationMinutes,
+      voicePersonality: reminder.voicePersonality,
+      ttsVoiceName: reminder.ttsVoiceName,
+      speechRate: reminder.speechRate,
+      speechPitch: reminder.speechPitch,
+      repeatFrequency: reminder.repeatFrequency,
+      customSpokenMessage: reminder.customSpokenMessage,
+      isEnabled: true,
+      isSpokenEnabled: reminder.isSpokenEnabled,
+    );
+  }
 }

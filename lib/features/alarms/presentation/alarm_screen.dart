@@ -133,10 +133,51 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     HapticFeedback.mediumImpact();
     await _ttsService.stop();
     await _logAction('completed');
+
+    final reminderRepo = ref.read(remindersRepositoryProvider);
+    final reminder = await reminderRepo.getReminderById(widget.reminderId);
+    if (reminder != null && reminder.repeatFrequency != 'none') {
+      final now = DateTime.now();
+      DateTime nextDate;
+      switch (reminder.repeatFrequency.toLowerCase()) {
+        case 'daily':
+          nextDate = now.add(const Duration(days: 1));
+          break;
+        case 'weekdays':
+          int addDays = 1;
+          if (now.weekday == DateTime.friday) {
+            addDays = 3;
+          } else if (now.weekday == DateTime.saturday) {
+            addDays = 2;
+          }
+          nextDate = now.add(Duration(days: addDays));
+          break;
+        case 'weekly':
+          nextDate = now.add(const Duration(days: 7));
+          break;
+        default:
+          nextDate = now.add(const Duration(days: 1));
+      }
+      await reminderRepo.rescheduleReminder(
+        id: reminder.id,
+        newScheduledAt: DateTime(
+          nextDate.year,
+          nextDate.month,
+          nextDate.day,
+          reminder.scheduledAt.hour,
+          reminder.scheduledAt.minute,
+        ),
+      );
+    }
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Great job! Reminder marked complete.'),
+        SnackBar(
+          content: Text(
+            reminder != null && reminder.repeatFrequency != 'none'
+                ? 'Great job! Recurring reminder advanced.'
+                : 'Great job! Reminder marked complete.',
+          ),
           backgroundColor: AppColors.successDark,
         ),
       );
@@ -152,22 +193,20 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
 
     if (pickedTime != null && mounted) {
       final now = DateTime.now();
-      final newTime = DateTime(
+      var newTime = DateTime(
         now.year,
         now.month,
         now.day,
         pickedTime.hour,
         pickedTime.minute,
       );
-      final alarmService = ref.read(alarmServiceProvider);
+      if (newTime.isBefore(now)) {
+        newTime = newTime.add(const Duration(days: 1));
+      }
 
-      await alarmService.scheduleReminder(
-        id: widget.reminderId,
-        title: widget.title,
-        scheduledAt: newTime,
-        customSpokenMessage: widget.spokenMessage,
-        voicePersonality: widget.voicePersonality,
-      );
+      await ref
+          .read(remindersRepositoryProvider)
+          .rescheduleReminder(id: widget.reminderId, newScheduledAt: newTime);
 
       await _logAction('rescheduled');
 
