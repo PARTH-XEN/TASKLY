@@ -38,8 +38,10 @@ An Android-first, 100% offline-first personal productivity and smart reminder ap
 - **Target Date Countdown**: Real-time remaining days indicator (e.g. `45 days left`).
 - **Goal Completion**: One-tap completion toggle with priority pills.
 
-### 5. Pomodoro Focus Timer
+### 5. Pomodoro Focus Timer & Task Linking
 - **Preset Durations**: 15 min, 25 min (standard Pomodoro), and 45 min deep work.
+- **Task Association**: Link any active, pending task to your focus session.
+- **One-Tap Completion Prompt**: Prompts to mark the linked task completed upon session finish.
 - **Circular Progress Countdown**: Clean visual countdown ring with Play, Pause, Reset, and Finish Early controls.
 - **Session Logging**: Persists focus minutes into SQLite to track daily productivity.
 
@@ -47,6 +49,12 @@ An Android-first, 100% offline-first personal productivity and smart reminder ap
 - **Live Productive Overview**: Real-time pending vs. completed task counters and completion percentage.
 - **Upcoming Reminders**: Next reminder USP card and chronological reminder list.
 - **Quick Action FAB**: One-tap modal to immediately create reminders, tasks, calendar events, wishlist goals, or start focus sessions.
+
+### 7. Profile & Settings Preferences
+- **Theme Selection**: System Default, Dark Mode, and Light Mode with persistent SQLite storage.
+- **Alarm Customization**: Default snooze duration picker (5m, 10m, 15m, 20m, 30m).
+- **General Preferences**: 12-Hour AM/PM vs. 24-Hour toggle, First Day of Week (Monday/Sunday), and Haptic Feedback toggle.
+- **Privacy & Offline Guarantee**: Documented 100% offline-first architecture with zero external telemetry and local data isolation.
 
 ---
 
@@ -97,7 +105,7 @@ lib/
 TASKLY is built with Test-Driven Development (TDD) and verified through automated test suites:
 
 ```bash
-# Run all unit and widget tests (58 passing tests)
+# Run all unit and widget tests (64 passing tests)
 flutter test
 
 # Verify static analysis (0 issues found)

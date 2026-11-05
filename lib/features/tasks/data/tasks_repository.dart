@@ -52,6 +52,13 @@ final filteredTasksStreamProvider = StreamProvider<List<Task>>((ref) {
   );
 });
 
+final activeTasksStreamProvider = StreamProvider<List<Task>>((ref) {
+  final repo = ref.watch(tasksRepositoryProvider);
+  return repo
+      .watchTasks(filter: TaskFilter.all)
+      .map((tasks) => tasks.where((t) => !t.isCompleted).toList());
+});
+
 final taskStatsStreamProvider = StreamProvider<TaskStats>((ref) {
   final repo = ref.watch(tasksRepositoryProvider);
   return repo.watchTaskStats();

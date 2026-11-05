@@ -106,74 +106,75 @@ class UpcomingEventsPreview extends ConsumerWidget {
                         ),
                       ),
                       child: ListTile(
-                      dense: true,
-                      leading: Container(
-                        width: 4,
-                        height: 32,
-                        decoration: BoxDecoration(
-                          color: catColor,
-                          borderRadius: BorderRadius.circular(2),
+                        dense: true,
+                        leading: Container(
+                          width: 4,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: catColor,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
                         ),
-                      ),
-                      title: Text(
-                        event.title,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
+                        title: Text(
+                          event.title,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      subtitle: event.startTime != null
-                          ? Text(
-                              event.endTime != null
-                                  ? '${event.startTime} - ${event.endTime}'
-                                  : event.startTime!,
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: isDark
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary,
-                              ),
-                            )
-                          : null,
-                      trailing: event.hasAlarm
-                          ? Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryIndigo.withValues(
-                                  alpha: 0.15,
+                        subtitle: event.startTime != null
+                            ? Text(
+                                event.endTime != null
+                                    ? '${event.startTime} - ${event.endTime}'
+                                    : event.startTime!,
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary,
                                 ),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.notifications_active_rounded,
-                                    size: 11,
-                                    color: AppColors.indigoLight,
+                              )
+                            : null,
+                        trailing: event.hasAlarm
+                            ? Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryIndigo.withValues(
+                                    alpha: 0.15,
                                   ),
-                                  const SizedBox(width: 3),
-                                  Text(
-                                    'Alarm',
-                                    style: theme.textTheme.labelSmall?.copyWith(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.notifications_active_rounded,
+                                      size: 11,
                                       color: AppColors.indigoLight,
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 3),
+                                    Text(
+                                      'Alarm',
+                                      style: theme.textTheme.labelSmall
+                                          ?.copyWith(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.indigoLight,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : const Icon(
+                                Icons.event_note_rounded,
+                                size: 16,
+                                color: AppColors.darkTextTertiary,
                               ),
-                            )
-                          : const Icon(
-                              Icons.event_note_rounded,
-                              size: 16,
-                              color: AppColors.darkTextTertiary,
-                            ),
-                      onTap: () => context.go('/calendar'),
+                        onTap: () => context.go('/calendar'),
+                      ),
                     ),
-                  ),
-                );
+                  );
                 }).toList(),
               );
             },

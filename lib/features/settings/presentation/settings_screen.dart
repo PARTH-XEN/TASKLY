@@ -7,9 +7,194 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/theme_provider.dart';
 import '../../../services/permission_service.dart';
 import '../../reminders/data/reminders_repository.dart';
+import '../data/settings_repository.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
+
+  void _showThemeDialog(
+    BuildContext context,
+    WidgetRef ref,
+    ThemeMode currentMode,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Choose Theme'),
+        content: RadioGroup<ThemeMode>(
+          groupValue: currentMode,
+          onChanged: (mode) async {
+            if (mode != null) {
+              ref.read(themeModeProvider.notifier).state = mode;
+              await ref.read(settingsRepositoryProvider).setThemeMode(mode);
+              if (ctx.mounted) Navigator.pop(ctx);
+            }
+          },
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<ThemeMode>(
+                title: Text('System Default'),
+                subtitle: Text('Follow system dark / light mode'),
+                value: ThemeMode.system,
+              ),
+              RadioListTile<ThemeMode>(
+                title: Text('Dark Mode'),
+                subtitle: Text('Deep charcoal & navy surfaces'),
+                value: ThemeMode.dark,
+              ),
+              RadioListTile<ThemeMode>(
+                title: Text('Light Mode'),
+                subtitle: Text('Crisp white cards & surfaces'),
+                value: ThemeMode.light,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSnoozeDurationDialog(
+    BuildContext context,
+    WidgetRef ref,
+    int currentMins,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Default Snooze Duration'),
+        content: RadioGroup<int>(
+          groupValue: currentMins,
+          onChanged: (val) async {
+            if (val != null) {
+              await ref
+                  .read(settingsRepositoryProvider)
+                  .setDefaultSnoozeMinutes(val);
+              if (ctx.mounted) Navigator.pop(ctx);
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [5, 10, 15, 20, 30].map((mins) {
+              return RadioListTile<int>(
+                title: Text('$mins minutes'),
+                value: mins,
+              );
+            }).toList(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showFirstDayDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String currentDay,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('First Day of Week'),
+        content: RadioGroup<String>(
+          groupValue: currentDay.toLowerCase(),
+          onChanged: (val) async {
+            if (val != null) {
+              await ref.read(settingsRepositoryProvider).setFirstDayOfWeek(val);
+              if (ctx.mounted) Navigator.pop(ctx);
+            }
+          },
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<String>(
+                title: Text('Monday'),
+                subtitle: Text('ISO 8601 standard week start'),
+                value: 'monday',
+              ),
+              RadioListTile<String>(
+                title: Text('Sunday'),
+                subtitle: Text('Traditional calendar week start'),
+                value: 'sunday',
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPrivacyDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.privacy_tip_rounded, color: AppColors.indigoLight),
+            SizedBox(width: 8),
+            Expanded(child: Text('Privacy & Offline First')),
+          ],
+        ),
+        content: const SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'TASKLY is engineered with a strict 100% offline-first architecture.',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+              SizedBox(height: AppSpacing.sm),
+              Text(
+                '• Zero External APIs: No telemetry, trackers, or user habits are sent to cloud servers.',
+                style: TextStyle(fontSize: 12),
+              ),
+              SizedBox(height: AppSpacing.xs),
+              Text(
+                '• Zero Paid AI APIs: All voice personalities (Nova, Max, Atlas, Echo) run locally using the device’s built-in Text-to-Speech engine.',
+                style: TextStyle(fontSize: 12),
+              ),
+              SizedBox(height: AppSpacing.xs),
+              Text(
+                '• Complete Data Isolation: Tasks, reminders, alarms, calendar agendas, and wishlist goals are persisted solely in your device’s local SQLite database.',
+                style: TextStyle(fontSize: 12),
+              ),
+              SizedBox(height: AppSpacing.xs),
+              Text(
+                '• No Account Required: You never need to sign in, provide an email, or connect any social profile.',
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Understood'),
+          ),
+        ],
+      ),
+    );
+  }
 
   void _showReliabilityGuideDialog(BuildContext context) {
     showDialog(
@@ -19,7 +204,7 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             Icon(Icons.verified_user_rounded, color: AppColors.indigoLight),
             SizedBox(width: 8),
-            Text('Reliability Guide'),
+            Expanded(child: Text('Reliability Guide')),
           ],
         ),
         content: SingleChildScrollView(
@@ -81,7 +266,18 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final themeMode = ref.watch(themeModeProvider);
+    final themeSubtitle = themeMode == ThemeMode.system
+        ? 'System Default'
+        : themeMode == ThemeMode.dark
+        ? 'Dark Mode'
+        : 'Light Mode';
+
+    final snoozeMins =
+        ref.watch(defaultSnoozeMinutesStreamProvider).value ?? 10;
+    final is24h = ref.watch(timeFormat24hStreamProvider).value ?? false;
+    final firstDay = ref.watch(firstDayOfWeekStreamProvider).value ?? 'monday';
+    final haptic = ref.watch(hapticFeedbackStreamProvider).value ?? true;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Profile & Settings')),
@@ -131,22 +327,23 @@ class SettingsScreen extends ConsumerWidget {
           const _SettingsSectionHeader(title: 'Appearance'),
           _SettingsTile(
             title: 'Theme Mode',
-            subtitle: isDark
-                ? 'Dark Mode (Tap to switch)'
-                : 'Light Mode (Tap to switch)',
+            subtitle: themeSubtitle,
             icon: Icons.palette_outlined,
             iconColor: AppColors.cyanLight,
-            onTap: () {
-              ref.read(themeModeProvider.notifier).state = isDark
-                  ? ThemeMode.light
-                  : ThemeMode.dark;
-            },
+            onTap: () => _showThemeDialog(context, ref, themeMode),
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // Alarm & Permissions Section
+          // Alarm & Reliability Section
           const _SettingsSectionHeader(
             title: 'Alarm & Notification Reliability',
+          ),
+          _SettingsTile(
+            title: 'Default Snooze Duration',
+            subtitle: '$snoozeMins minutes',
+            icon: Icons.snooze_rounded,
+            iconColor: AppColors.indigoLight,
+            onTap: () => _showSnoozeDurationDialog(context, ref, snoozeMins),
           ),
           _SettingsTile(
             title: 'Alarm History & Logs',
@@ -198,6 +395,62 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
+          // General Preferences Section
+          const _SettingsSectionHeader(title: 'General Preferences'),
+          _SettingsTile(
+            title: 'Time Format',
+            subtitle: is24h ? '24-Hour (14:30)' : '12-Hour (2:30 PM)',
+            icon: Icons.schedule_rounded,
+            iconColor: AppColors.cyanLight,
+            trailing: Switch.adaptive(
+              value: is24h,
+              onChanged: (val) async {
+                await ref
+                    .read(settingsRepositoryProvider)
+                    .setTimeFormat24h(val);
+              },
+            ),
+            onTap: () async {
+              await ref
+                  .read(settingsRepositoryProvider)
+                  .setTimeFormat24h(!is24h);
+            },
+          ),
+          _SettingsTile(
+            title: 'First Day of Week',
+            subtitle: firstDay.toLowerCase() == 'monday' ? 'Monday' : 'Sunday',
+            icon: Icons.calendar_today_rounded,
+            iconColor: AppColors.indigoLight,
+            onTap: () => _showFirstDayDialog(context, ref, firstDay),
+          ),
+          _SettingsTile(
+            title: 'Haptic Feedback',
+            subtitle: 'Vibrate on button taps & alarm interactions',
+            icon: Icons.vibration_rounded,
+            iconColor: AppColors.primaryIndigo,
+            trailing: Switch.adaptive(
+              value: haptic,
+              onChanged: (val) async {
+                await ref
+                    .read(settingsRepositoryProvider)
+                    .setHapticFeedback(val);
+              },
+            ),
+            onTap: () async {
+              await ref
+                  .read(settingsRepositoryProvider)
+                  .setHapticFeedback(!haptic);
+            },
+          ),
+          _SettingsTile(
+            title: 'Privacy & Offline Guarantee',
+            subtitle: '100% offline-first • Zero external telemetry',
+            icon: Icons.security_rounded,
+            iconColor: AppColors.successLight,
+            onTap: () => _showPrivacyDialog(context),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+
           // About Section
           const _SettingsSectionHeader(title: 'About TASKLY'),
           _SettingsTile(
@@ -210,7 +463,7 @@ class SettingsScreen extends ConsumerWidget {
                 context: context,
                 applicationName: 'TASKLY',
                 applicationVersion: '1.0.0+1',
-                applicationLegalese: '100% Free and Open Source Productivity & Smart Spoken Alarms',
+                applicationLegalese: '100% Free and Open Source Productivity & Smart Spoken Alarms\n\nTagline: "Don\'t just remind me when. Remind me what."',
               );
             },
           ),
@@ -249,6 +502,7 @@ class _SettingsTile extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
   final VoidCallback onTap;
+  final Widget? trailing;
 
   const _SettingsTile({
     required this.title,
@@ -256,6 +510,7 @@ class _SettingsTile extends StatelessWidget {
     required this.icon,
     required this.iconColor,
     required this.onTap,
+    this.trailing,
   });
 
   @override
@@ -296,12 +551,14 @@ class _SettingsTile extends StatelessWidget {
                   : AppColors.lightTextSecondary,
             ),
           ),
-          trailing: Icon(
-            Icons.chevron_right_rounded,
-            color: isDark
-                ? AppColors.darkTextTertiary
-                : AppColors.lightTextTertiary,
-          ),
+          trailing:
+              trailing ??
+              Icon(
+                Icons.chevron_right_rounded,
+                color: isDark
+                    ? AppColors.darkTextTertiary
+                    : AppColors.lightTextTertiary,
+              ),
           onTap: onTap,
         ),
       ),

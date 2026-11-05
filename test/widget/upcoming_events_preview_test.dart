@@ -6,31 +6,32 @@ import 'package:taskly/features/calendar/data/calendar_repository.dart';
 import 'package:taskly/features/dashboard/presentation/widgets/upcoming_events_preview.dart';
 
 void main() {
-  testWidgets('UpcomingEventsPreview shows empty card when no events scheduled today',
-      (tester) async {
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          eventsForSelectedDateStreamProvider.overrideWith(
-            (ref) => Stream.value([]),
-          ),
-        ],
-        child: const MaterialApp(
-          home: Scaffold(
-            body: UpcomingEventsPreview(),
+  testWidgets(
+    'UpcomingEventsPreview shows empty card when no events scheduled today',
+    (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            eventsForSelectedDateStreamProvider.overrideWith(
+              (ref) => Stream.value([]),
+            ),
+          ],
+          child: const MaterialApp(
+            home: Scaffold(body: UpcomingEventsPreview()),
           ),
         ),
-      ),
-    );
+      );
 
-    await tester.pump();
+      await tester.pump();
 
-    expect(find.text("Today's Schedule"), findsOneWidget);
-    expect(find.text('No events scheduled for today'), findsOneWidget);
-  });
+      expect(find.text("Today's Schedule"), findsOneWidget);
+      expect(find.text('No events scheduled for today'), findsOneWidget);
+    },
+  );
 
-  testWidgets('UpcomingEventsPreview shows event list with alarm indicator',
-      (tester) async {
+  testWidgets('UpcomingEventsPreview shows event list with alarm indicator', (
+    tester,
+  ) async {
     final now = DateTime.now();
     final sampleEvent = CalendarEvent(
       id: 'dash-evt-1',
@@ -52,11 +53,7 @@ void main() {
             (ref) => Stream.value([sampleEvent]),
           ),
         ],
-        child: const MaterialApp(
-          home: Scaffold(
-            body: UpcomingEventsPreview(),
-          ),
-        ),
+        child: const MaterialApp(home: Scaffold(body: UpcomingEventsPreview())),
       ),
     );
 

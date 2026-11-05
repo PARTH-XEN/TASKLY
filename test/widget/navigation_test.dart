@@ -31,9 +31,7 @@ void main() {
           taskStatsStreamProvider.overrideWith(
             (ref) => Stream.value(TaskStats.empty()),
           ),
-          filteredTasksStreamProvider.overrideWith(
-            (ref) => Stream.value([]),
-          ),
+          filteredTasksStreamProvider.overrideWith((ref) => Stream.value([])),
           filteredWishlistStreamProvider.overrideWith(
             (ref) => Stream.value([]),
           ),
