@@ -40,7 +40,7 @@ class RemindersRepository {
     final query = _db.select(_db.appSettings)
       ..where((tbl) => tbl.key.equals('show_over_lock_screen'));
     final setting = await query.getSingleOrNull();
-    return setting?.value != 'false';
+    return setting?.value == 'true';
   }
 
   Stream<List<Reminder>> watchAllReminders() {
@@ -79,6 +79,7 @@ class RemindersRepository {
     String? customSpokenMessage,
     bool isEnabled = true,
     bool isSpokenEnabled = true,
+    int? speechRepeatCount,
   }) async {
     await _db
         .into(_db.reminders)
@@ -101,7 +102,8 @@ class RemindersRepository {
         );
 
     if (isEnabled) {
-      final repeatCount = await _getDefaultRepeatCount();
+      final defaultRepeats = await _getDefaultRepeatCount();
+      final repeatCount = speechRepeatCount ?? defaultRepeats;
       final showLockScreen = await _getShowOverLockScreen();
       await _alarmService.scheduleReminder(
         id: id,
@@ -131,6 +133,7 @@ class RemindersRepository {
     String? customSpokenMessage,
     bool isEnabled = true,
     bool isSpokenEnabled = true,
+    int? speechRepeatCount,
   }) async {
     await (_db.update(_db.reminders)..where((tbl) => tbl.id.equals(id))).write(
       RemindersCompanion(
@@ -153,7 +156,8 @@ class RemindersRepository {
     await _alarmService.cancelReminder(id);
 
     if (isEnabled) {
-      final repeatCount = await _getDefaultRepeatCount();
+      final defaultRepeats = await _getDefaultRepeatCount();
+      final repeatCount = speechRepeatCount ?? defaultRepeats;
       final showLockScreen = await _getShowOverLockScreen();
       await _alarmService.scheduleReminder(
         id: id,

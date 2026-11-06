@@ -339,7 +339,7 @@ class SettingsScreen extends ConsumerWidget {
     final speechRepeats =
         ref.watch(speechRepeatCountStreamProvider).value ?? 1;
     final showOverLockScreen =
-        ref.watch(showOverLockScreenStreamProvider).value ?? true;
+        ref.watch(showOverLockScreenStreamProvider).value ?? false;
     final is24h = ref.watch(timeFormat24hStreamProvider).value ?? false;
     final firstDay = ref.watch(firstDayOfWeekStreamProvider).value ?? 'monday';
     final haptic = ref.watch(hapticFeedbackStreamProvider).value ?? true;

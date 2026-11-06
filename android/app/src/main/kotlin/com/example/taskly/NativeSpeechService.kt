@@ -178,6 +178,7 @@ class NativeSpeechService : Service(), TextToSpeech.OnInitListener {
             putExtra("spokenMessage", reminder.spokenMessage)
             putExtra("voicePersonality", reminder.voicePersonality)
             putExtra("fromAlarm", true)
+            putExtra("showOverLockScreen", reminder.showOverLockScreen)
         }
         val fullScreenPendingIntent = PendingIntent.getActivity(
             this,

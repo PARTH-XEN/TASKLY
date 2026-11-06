@@ -48,7 +48,7 @@ class CalendarRepository {
     final query = _db.select(_db.appSettings)
       ..where((tbl) => tbl.key.equals('show_over_lock_screen'));
     final setting = await query.getSingleOrNull();
-    return setting?.value != 'false';
+    return setting?.value == 'true';
   }
 
   Stream<List<CalendarEvent>> watchAllEvents() {

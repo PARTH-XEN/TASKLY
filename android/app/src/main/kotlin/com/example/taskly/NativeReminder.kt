@@ -18,7 +18,7 @@ data class NativeReminder(
     val ttsVoiceName: String? = null,
     val isEnabled: Boolean = true,
     val speechRepeatCount: Int = 1,
-    val showOverLockScreen: Boolean = true
+    val showOverLockScreen: Boolean = false
 ) {
     fun toJson(): String {
         val json = JSONObject()
@@ -55,7 +55,7 @@ data class NativeReminder(
                     ttsVoiceName = if (json.has("ttsVoiceName") && !json.isNull("ttsVoiceName")) json.getString("ttsVoiceName") else null,
                     isEnabled = json.optBoolean("isEnabled", true),
                     speechRepeatCount = json.optInt("speechRepeatCount", 1),
-                    showOverLockScreen = json.optBoolean("showOverLockScreen", true)
+                    showOverLockScreen = json.optBoolean("showOverLockScreen", false)
                 )
             } catch (e: Exception) {
                 null
@@ -89,7 +89,7 @@ data class NativeReminder(
                 is Number -> repVal.toInt()
                 else -> 1
             }
-            val showOverLockScreen = (map["showOverLockScreen"] as? Boolean) ?: true
+            val showOverLockScreen = (map["showOverLockScreen"] as? Boolean) ?: false
 
             return NativeReminder(
                 id = id,

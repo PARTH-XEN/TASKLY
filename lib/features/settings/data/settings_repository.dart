@@ -151,8 +151,8 @@ class SettingsRepository {
   Stream<bool> watchShowOverLockScreen() {
     return watchSetting(
       keyShowOverLockScreen,
-      'true',
-    ).map((val) => val != 'false');
+      'false',
+    ).map((val) => val == 'true');
   }
 
   Future<void> setShowOverLockScreen(bool enabled) async {

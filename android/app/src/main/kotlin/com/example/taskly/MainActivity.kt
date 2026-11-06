@@ -18,25 +18,42 @@ class MainActivity : FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        turnScreenOnAndShowWhenLocked()
+        checkAndApplyLockScreenFlags(intent)
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        turnScreenOnAndShowWhenLocked()
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        checkAndApplyLockScreenFlags(intent)
+        handleAlarmLaunchIntent(intent)
     }
 
-    private fun turnScreenOnAndShowWhenLocked() {
+    private fun checkAndApplyLockScreenFlags(intent: Intent?) {
+        val fromAlarm = intent?.getBooleanExtra("fromAlarm", false) == true
+        val showOverLock = intent?.getBooleanExtra("showOverLockScreen", false) == true
+        turnScreenOnAndShowWhenLocked(fromAlarm && showOverLock)
+    }
+
+    private fun turnScreenOnAndShowWhenLocked(enable: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            setShowWhenLocked(true)
-            setTurnScreenOn(true)
+            setShowWhenLocked(enable)
+            setTurnScreenOn(enable)
         } else {
-            @Suppress("DEPRECATION")
-            window.addFlags(
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-            )
+            if (enable) {
+                @Suppress("DEPRECATION")
+                window.addFlags(
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                window.clearFlags(
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                )
+            }
         }
     }
 
@@ -162,12 +179,6 @@ class MainActivity : FlutterActivity() {
         }
 
         // Check if app launched from full-screen alarm notification
-        handleAlarmLaunchIntent(intent)
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        setIntent(intent)
         handleAlarmLaunchIntent(intent)
     }
 

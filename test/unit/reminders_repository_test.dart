@@ -20,7 +20,7 @@ class FakeAlarmService extends AlarmService {
     double speechRate = 1.0,
     double speechPitch = 1.0,
     int speechRepeatCount = 1,
-    bool showOverLockScreen = true,
+    bool showOverLockScreen = false,
   }) async {
     scheduledIds.add(id);
     return true;

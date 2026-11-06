@@ -8,6 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../services/alarm_service.dart';
 import '../../../services/permission_service.dart';
+import '../../settings/data/settings_repository.dart';
 import '../data/reminders_repository.dart';
 import '../../voice/presentation/voice_settings_screen.dart';
 import 'widgets/relative_duration_chips.dart';
@@ -44,10 +45,12 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
   final double _speechPitch = 1.0;
   String _repeatFrequency = 'none';
   bool _isSpokenEnabled = true;
+  int _speechRepeatCount = 1;
 
   @override
   void initState() {
     super.initState();
+    _speechRepeatCount = ref.read(speechRepeatCountStreamProvider).value ?? 1;
     _titleController.addListener(() => setState(() {}));
     _customMessageController.addListener(() => setState(() {}));
   }
@@ -153,6 +156,7 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
           ? null
           : _customMessageController.text.trim(),
       isSpokenEnabled: _isSpokenEnabled,
+      speechRepeatCount: _speechRepeatCount,
     );
 
     if (mounted) {
@@ -350,6 +354,48 @@ class _CreateReminderSheetState extends ConsumerState<CreateReminderSheet> {
                             onSelected: (val) {
                               if (val) {
                                 setState(() => _repeatFrequency = freq.$1);
+                              }
+                            },
+                          );
+                        }).toList(),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+
+                  // Spoken Repeats Selector (USP)
+                  Text(
+                    'SPOKEN REPEATS WHEN RINGING',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.1,
+                      color: AppColors.indigoLight,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Wrap(
+                    spacing: AppSpacing.xs,
+                    children:
+                        [
+                          (1, '1 time'),
+                          (2, '2 times'),
+                          (3, '3 times'),
+                          (5, '5 times'),
+                          (10, 'Continuous'),
+                        ].map((rep) {
+                          final isSelected = _speechRepeatCount == rep.$1;
+                          return ChoiceChip(
+                            label: Text(rep.$2),
+                            selected: isSelected,
+                            selectedColor: AppColors.indigoLight,
+                            labelStyle: TextStyle(
+                              fontSize: 12,
+                              color: isSelected ? Colors.white : null,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                            onSelected: (val) {
+                              if (val) {
+                                setState(() => _speechRepeatCount = rep.$1);
                               }
                             },
                           );
