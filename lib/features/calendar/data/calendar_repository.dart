@@ -37,6 +37,20 @@ class CalendarRepository {
 
   CalendarRepository(this._db, this._alarmService);
 
+  Future<int> _getDefaultRepeatCount() async {
+    final query = _db.select(_db.appSettings)
+      ..where((tbl) => tbl.key.equals('speech_repeat_count'));
+    final setting = await query.getSingleOrNull();
+    return int.tryParse(setting?.value ?? '1') ?? 1;
+  }
+
+  Future<bool> _getShowOverLockScreen() async {
+    final query = _db.select(_db.appSettings)
+      ..where((tbl) => tbl.key.equals('show_over_lock_screen'));
+    final setting = await query.getSingleOrNull();
+    return setting?.value != 'false';
+  }
+
   Stream<List<CalendarEvent>> watchAllEvents() {
     return (_db.select(
       _db.calendarEvents,
@@ -95,6 +109,8 @@ class CalendarRepository {
     if (hasAlarm) {
       final scheduledTime = _calculateEventAlarmDateTime(eventDate, startTime);
       if (scheduledTime.isAfter(DateTime.now())) {
+        final repeatCount = await _getDefaultRepeatCount();
+        final showLockScreen = await _getShowOverLockScreen();
         await _alarmService.scheduleReminder(
           id: id,
           title: title,
@@ -102,6 +118,8 @@ class CalendarRepository {
           voicePersonality: 'nova',
           customSpokenMessage:
               'Reminder for your calendar event: $title. It is scheduled now.',
+          speechRepeatCount: repeatCount,
+          showOverLockScreen: showLockScreen,
         );
       }
     }
@@ -136,6 +154,8 @@ class CalendarRepository {
     if (hasAlarm) {
       final scheduledTime = _calculateEventAlarmDateTime(eventDate, startTime);
       if (scheduledTime.isAfter(DateTime.now())) {
+        final repeatCount = await _getDefaultRepeatCount();
+        final showLockScreen = await _getShowOverLockScreen();
         await _alarmService.scheduleReminder(
           id: id,
           title: title,
@@ -143,6 +163,8 @@ class CalendarRepository {
           voicePersonality: 'nova',
           customSpokenMessage:
               'Reminder for your calendar event: $title. It is scheduled now.',
+          speechRepeatCount: repeatCount,
+          showOverLockScreen: showLockScreen,
         );
       }
     } else {
