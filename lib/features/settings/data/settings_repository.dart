@@ -34,6 +34,16 @@ final hapticFeedbackStreamProvider = StreamProvider<bool>((ref) {
   return repo.watchHapticFeedback();
 });
 
+final speechRepeatCountStreamProvider = StreamProvider<int>((ref) {
+  final repo = ref.watch(settingsRepositoryProvider);
+  return repo.watchSpeechRepeatCount();
+});
+
+final showOverLockScreenStreamProvider = StreamProvider<bool>((ref) {
+  final repo = ref.watch(settingsRepositoryProvider);
+  return repo.watchShowOverLockScreen();
+});
+
 class SettingsRepository {
   final AppDatabase _db;
 
@@ -42,6 +52,8 @@ class SettingsRepository {
   static const String keyTimeFormat24h = 'time_format_24h';
   static const String keyFirstDayOfWeek = 'first_day_of_week';
   static const String keyHapticFeedback = 'haptic_feedback';
+  static const String keySpeechRepeatCount = 'speech_repeat_count';
+  static const String keyShowOverLockScreen = 'show_over_lock_screen';
 
   SettingsRepository(this._db);
 
@@ -123,5 +135,27 @@ class SettingsRepository {
 
   Future<void> setHapticFeedback(bool enabled) async {
     await setSetting(keyHapticFeedback, enabled.toString());
+  }
+
+  Stream<int> watchSpeechRepeatCount() {
+    return watchSetting(
+      keySpeechRepeatCount,
+      '1',
+    ).map((val) => int.tryParse(val) ?? 1);
+  }
+
+  Future<void> setSpeechRepeatCount(int count) async {
+    await setSetting(keySpeechRepeatCount, count.toString());
+  }
+
+  Stream<bool> watchShowOverLockScreen() {
+    return watchSetting(
+      keyShowOverLockScreen,
+      'true',
+    ).map((val) => val != 'false');
+  }
+
+  Future<void> setShowOverLockScreen(bool enabled) async {
+    await setSetting(keyShowOverLockScreen, enabled.toString());
   }
 }

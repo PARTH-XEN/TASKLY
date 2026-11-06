@@ -35,11 +35,11 @@ const String _versionCheckUrl =
 
 /// The version currently installed on the device.
 /// Must match pubspec.yaml → version field (before the +build number).
-const String _currentVersion = '1.0.0';
+const String _currentVersion = '1.0.1';
 
 /// The build number currently installed on the device.
 /// Must match pubspec.yaml → version field (after the +).
-const int _currentBuild = 1;
+const int _currentBuild = 3;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data model

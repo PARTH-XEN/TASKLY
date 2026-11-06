@@ -34,10 +34,13 @@ void main() {
     await tester.pumpWidget(buildSettingsScreen(db));
     await tester.pumpAndSettle();
 
-    // Verify Initial Visible Section Headers
+    // Verify Initial Visible Section Headers & Tiles
     expect(find.text('VOICE PERSONALITIES (USP)'), findsOneWidget);
     expect(find.text('APPEARANCE'), findsOneWidget);
+    expect(find.text('Theme Mode'), findsOneWidget);
     expect(find.text('ALARM & NOTIFICATION RELIABILITY'), findsOneWidget);
+    expect(find.text('Spoken Announcement Repeats'), findsOneWidget);
+    expect(find.text('Show Alarm Over Lock Screen'), findsOneWidget);
 
     // Scroll to check General Preferences & About sections
     await tester.scrollUntilVisible(
@@ -48,17 +51,20 @@ void main() {
     expect(find.text('GENERAL PREFERENCES'), findsOneWidget);
 
     await tester.scrollUntilVisible(
+      find.text('First Day of Week'),
+      200,
+      scrollable: find.byType(Scrollable),
+    );
+    expect(find.text('Time Format'), findsOneWidget);
+    expect(find.text('First Day of Week'), findsOneWidget);
+    expect(find.text('Haptic Feedback'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
       find.text('ABOUT TASKLY'),
       200,
       scrollable: find.byType(Scrollable),
     );
     expect(find.text('ABOUT TASKLY'), findsOneWidget);
-
-    // Verify Specific Feature Tiles
-    expect(find.text('Theme Mode'), findsOneWidget);
-    expect(find.text('Time Format'), findsOneWidget);
-    expect(find.text('First Day of Week'), findsOneWidget);
-    expect(find.text('Haptic Feedback'), findsOneWidget);
 
     await db.close();
   });

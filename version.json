@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "build": 1,
-  "downloadUrl": "https://github.com/PARTH-XEN/taskly/releases/latest/download/app-release.apk",
-  "releaseNotes": "Initial release with native spoken alarms, acoustic branding, and in-app update checker."
+  "version": "1.0.1",
+  "build": 3,
+  "downloadUrl": "https://github.com/PARTH-XEN/TASKLY/releases/latest/download/app-release.apk",
+  "releaseNotes": "Configurable spoken alarm repeats (1x, 2x, 3x, 5x, continuous) and lock-screen alarm display toggle."
 }

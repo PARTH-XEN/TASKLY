@@ -54,6 +54,8 @@ class AlarmService {
     String voicePersonality = 'nova',
     double speechRate = 1.0,
     double speechPitch = 1.0,
+    int speechRepeatCount = 1,
+    bool showOverLockScreen = true,
   }) async {
     // If time is in the past by more than 10 seconds, do not schedule
     if (scheduledAt.isBefore(
@@ -83,10 +85,12 @@ class AlarmService {
             'speechPitch': speechPitch,
             'language': 'en-US',
             'isEnabled': true,
+            'speechRepeatCount': speechRepeatCount,
+            'showOverLockScreen': showOverLockScreen,
           },
         );
         if (success == true) {
-          debugPrint('TASKLY Native spoken alarm scheduled for $id');
+          debugPrint('TASKLY Native spoken alarm scheduled for $id (repeats: $speechRepeatCount, lockscreen: $showOverLockScreen)');
           return true;
         }
       } catch (nativeError) {
@@ -209,6 +213,18 @@ class AlarmService {
         await _platformChannel.invokeMethod('stopNativeSpeech');
       } catch (e) {
         debugPrint('TASKLY Stop native speech error: $e');
+      }
+    }
+  }
+
+  /// Sends the full-screen alarm activity to the background so the device
+  /// returns smoothly to its previous or locked state.
+  Future<void> dismissAlarmActivity() async {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      try {
+        await _platformChannel.invokeMethod('dismissAlarmActivity');
+      } catch (e) {
+        debugPrint('TASKLY dismissAlarmActivity error: $e');
       }
     }
   }

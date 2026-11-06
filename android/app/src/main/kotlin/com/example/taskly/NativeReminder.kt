@@ -16,7 +16,9 @@ data class NativeReminder(
     val speechPitch: Float = 1.0f,
     val language: String = "en-US",
     val ttsVoiceName: String? = null,
-    val isEnabled: Boolean = true
+    val isEnabled: Boolean = true,
+    val speechRepeatCount: Int = 1,
+    val showOverLockScreen: Boolean = true
 ) {
     fun toJson(): String {
         val json = JSONObject()
@@ -32,6 +34,8 @@ data class NativeReminder(
             json.put("ttsVoiceName", ttsVoiceName)
         }
         json.put("isEnabled", isEnabled)
+        json.put("speechRepeatCount", speechRepeatCount)
+        json.put("showOverLockScreen", showOverLockScreen)
         return json.toString()
     }
 
@@ -49,7 +53,9 @@ data class NativeReminder(
                     speechPitch = json.optDouble("speechPitch", 1.0).toFloat(),
                     language = json.optString("language", "en-US"),
                     ttsVoiceName = if (json.has("ttsVoiceName") && !json.isNull("ttsVoiceName")) json.getString("ttsVoiceName") else null,
-                    isEnabled = json.optBoolean("isEnabled", true)
+                    isEnabled = json.optBoolean("isEnabled", true),
+                    speechRepeatCount = json.optInt("speechRepeatCount", 1),
+                    showOverLockScreen = json.optBoolean("showOverLockScreen", true)
                 )
             } catch (e: Exception) {
                 null
@@ -79,6 +85,11 @@ data class NativeReminder(
             val language = (map["language"] as? String) ?: "en-US"
             val ttsVoiceName = map["ttsVoiceName"] as? String
             val isEnabled = (map["isEnabled"] as? Boolean) ?: true
+            val speechRepeatCount = when (val repVal = map["speechRepeatCount"]) {
+                is Number -> repVal.toInt()
+                else -> 1
+            }
+            val showOverLockScreen = (map["showOverLockScreen"] as? Boolean) ?: true
 
             return NativeReminder(
                 id = id,
@@ -90,7 +101,9 @@ data class NativeReminder(
                 speechPitch = speechPitch,
                 language = language,
                 ttsVoiceName = ttsVoiceName,
-                isEnabled = isEnabled
+                isEnabled = isEnabled,
+                speechRepeatCount = speechRepeatCount,
+                showOverLockScreen = showOverLockScreen
             )
         }
     }

@@ -29,6 +29,20 @@ class RemindersRepository {
 
   RemindersRepository(this._db, this._alarmService);
 
+  Future<int> _getDefaultRepeatCount() async {
+    final query = _db.select(_db.appSettings)
+      ..where((tbl) => tbl.key.equals('speech_repeat_count'));
+    final setting = await query.getSingleOrNull();
+    return int.tryParse(setting?.value ?? '1') ?? 1;
+  }
+
+  Future<bool> _getShowOverLockScreen() async {
+    final query = _db.select(_db.appSettings)
+      ..where((tbl) => tbl.key.equals('show_over_lock_screen'));
+    final setting = await query.getSingleOrNull();
+    return setting?.value != 'false';
+  }
+
   Stream<List<Reminder>> watchAllReminders() {
     return (_db.select(
       _db.reminders,
@@ -87,6 +101,8 @@ class RemindersRepository {
         );
 
     if (isEnabled) {
+      final repeatCount = await _getDefaultRepeatCount();
+      final showLockScreen = await _getShowOverLockScreen();
       await _alarmService.scheduleReminder(
         id: id,
         title: title,
@@ -95,6 +111,8 @@ class RemindersRepository {
         voicePersonality: voicePersonality,
         speechRate: speechRate,
         speechPitch: speechPitch,
+        speechRepeatCount: repeatCount,
+        showOverLockScreen: showLockScreen,
       );
     }
   }
@@ -135,6 +153,8 @@ class RemindersRepository {
     await _alarmService.cancelReminder(id);
 
     if (isEnabled) {
+      final repeatCount = await _getDefaultRepeatCount();
+      final showLockScreen = await _getShowOverLockScreen();
       await _alarmService.scheduleReminder(
         id: id,
         title: title,
@@ -143,6 +163,8 @@ class RemindersRepository {
         voicePersonality: voicePersonality,
         speechRate: speechRate,
         speechPitch: speechPitch,
+        speechRepeatCount: repeatCount,
+        showOverLockScreen: showLockScreen,
       );
     }
   }
@@ -163,6 +185,8 @@ class RemindersRepository {
     final reminder = await getReminderById(id);
     if (reminder != null) {
       if (isEnabled) {
+        final repeatCount = await _getDefaultRepeatCount();
+        final showLockScreen = await _getShowOverLockScreen();
         await _alarmService.scheduleReminder(
           id: id,
           title: reminder.title,
@@ -171,6 +195,8 @@ class RemindersRepository {
           voicePersonality: reminder.voicePersonality,
           speechRate: reminder.speechRate,
           speechPitch: reminder.speechPitch,
+          speechRepeatCount: repeatCount,
+          showOverLockScreen: showLockScreen,
         );
       } else {
         await _alarmService.cancelReminder(id);

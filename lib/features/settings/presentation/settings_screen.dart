@@ -101,6 +101,66 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
+  void _showSpeechRepeatDialog(
+    BuildContext context,
+    WidgetRef ref,
+    int currentRepeats,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Spoken Announcement Repeats'),
+        content: RadioGroup<int>(
+          groupValue: currentRepeats,
+          onChanged: (val) async {
+            if (val != null) {
+              await ref
+                  .read(settingsRepositoryProvider)
+                  .setSpeechRepeatCount(val);
+              if (ctx.mounted) Navigator.pop(ctx);
+            }
+          },
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<int>(
+                title: Text('Speak once (Default)'),
+                subtitle: Text('Plays spoken reminder 1 time'),
+                value: 1,
+              ),
+              RadioListTile<int>(
+                title: Text('Repeat 2 times'),
+                subtitle: Text('Repeats once with 2.5s pause'),
+                value: 2,
+              ),
+              RadioListTile<int>(
+                title: Text('Repeat 3 times'),
+                subtitle: Text('Repeats 3 times with 2.5s pauses'),
+                value: 3,
+              ),
+              RadioListTile<int>(
+                title: Text('Repeat 5 times'),
+                subtitle: Text('Repeats 5 times with 2.5s pauses'),
+                value: 5,
+              ),
+              RadioListTile<int>(
+                title: Text('Continuous'),
+                subtitle: Text('Repeats until Stopped or Snoozed (max 5m)'),
+                value: 10,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showFirstDayDialog(
     BuildContext context,
     WidgetRef ref,
@@ -276,9 +336,19 @@ class SettingsScreen extends ConsumerWidget {
 
     final snoozeMins =
         ref.watch(defaultSnoozeMinutesStreamProvider).value ?? 10;
+    final speechRepeats =
+        ref.watch(speechRepeatCountStreamProvider).value ?? 1;
+    final showOverLockScreen =
+        ref.watch(showOverLockScreenStreamProvider).value ?? true;
     final is24h = ref.watch(timeFormat24hStreamProvider).value ?? false;
     final firstDay = ref.watch(firstDayOfWeekStreamProvider).value ?? 'monday';
     final haptic = ref.watch(hapticFeedbackStreamProvider).value ?? true;
+
+    final repeatSubtitle = speechRepeats == 1
+        ? 'Speak once (Default)'
+        : speechRepeats == 10
+        ? 'Continuous (until stopped)'
+        : 'Repeat $speechRepeats times';
 
     return Scaffold(
       appBar: AppBar(title: const Text('Profile & Settings')),
@@ -363,6 +433,34 @@ class SettingsScreen extends ConsumerWidget {
           // Alarm & Reliability Section
           const _SettingsSectionHeader(
             title: 'Alarm & Notification Reliability',
+          ),
+          _SettingsTile(
+            title: 'Spoken Announcement Repeats',
+            subtitle: repeatSubtitle,
+            icon: Icons.repeat_rounded,
+            iconColor: AppColors.voiceNova,
+            onTap: () => _showSpeechRepeatDialog(context, ref, speechRepeats),
+          ),
+          _SettingsTile(
+            title: 'Show Alarm Over Lock Screen',
+            subtitle: showOverLockScreen
+                ? 'Full-screen visual alarm pops over lock screen'
+                : 'Clean notification & speech only (keeps phone locked)',
+            icon: Icons.screen_lock_portrait_rounded,
+            iconColor: AppColors.cyanLight,
+            trailing: Switch.adaptive(
+              value: showOverLockScreen,
+              onChanged: (val) async {
+                await ref
+                    .read(settingsRepositoryProvider)
+                    .setShowOverLockScreen(val);
+              },
+            ),
+            onTap: () async {
+              await ref
+                  .read(settingsRepositoryProvider)
+                  .setShowOverLockScreen(!showOverLockScreen);
+            },
           ),
           _SettingsTile(
             title: 'Default Snooze Duration',
@@ -482,14 +580,14 @@ class SettingsScreen extends ConsumerWidget {
           _CheckForUpdateTile(),
           _SettingsTile(
             title: 'Version',
-            subtitle: '1.0.0+1 (Offline First • Zero AI APIs)',
+            subtitle: '1.0.1+3 (Offline First • Zero AI APIs)',
             icon: Icons.info_outline_rounded,
             iconColor: AppColors.darkTextTertiary,
             onTap: () {
               showAboutDialog(
                 context: context,
                 applicationName: 'TASKLY',
-                applicationVersion: '1.0.0+1',
+                applicationVersion: '1.0.1+3',
                 applicationIcon: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(

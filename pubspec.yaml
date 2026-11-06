@@ -1,7 +1,7 @@
 name: taskly
 description: "TASKLY — Don't just remind me when. Remind me what. Spoken smart reminder & productivity app."
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.1+3
 
 environment:
   sdk: ^3.13.7

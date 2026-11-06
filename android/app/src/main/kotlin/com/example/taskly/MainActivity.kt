@@ -125,6 +125,15 @@ class MainActivity : FlutterActivity() {
                     }
                 }
 
+                "dismissAlarmActivity" -> {
+                    try {
+                        moveTaskToBack(true)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("DISMISS_FAILED", e.message, null)
+                    }
+                }
+
                 "canScheduleExactAlarms" -> {
                     val scheduler = NativeAlarmScheduler(this)
                     result.success(scheduler.canScheduleExactAlarms())

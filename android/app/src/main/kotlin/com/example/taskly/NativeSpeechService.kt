@@ -40,7 +40,12 @@ class NativeSpeechService : Service(), TextToSpeech.OnInitListener {
     private var audioFocusRequest: AudioFocusRequest? = null
     private val mainHandler = Handler(Looper.getMainLooper())
     private var safetyTimeoutRunnable: Runnable? = null
+    private var repeatRunnable: Runnable? = null
     private var currentNotificationId = 1001
+
+    private var currentRepeatIndex = 0
+    private var targetRepeatCount = 1
+    private var isStopped = false
 
     companion object {
         const val TAG = "NativeSpeechService"
@@ -49,7 +54,7 @@ class NativeSpeechService : Service(), TextToSpeech.OnInitListener {
         const val EXTRA_REMINDER_ID = "com.example.taskly.EXTRA_REMINDER_ID"
         const val CHANNEL_ID = "taskly_alarm_channel_v2"
         const val CHANNEL_NAME = "TASKLY Spoken Alarms"
-        private const val TIMEOUT_MILLIS = 45000L // 45s safety timeout
+        private const val BASE_TIMEOUT_MILLIS = 45000L
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -90,6 +95,12 @@ class NativeSpeechService : Service(), TextToSpeech.OnInitListener {
             pendingReminder = reminder
             currentNotificationId = NativeAlarmScheduler.getRequestCode(reminder.id)
 
+            // Reset repeat state and determine target repetitions
+            isStopped = false
+            currentRepeatIndex = 0
+            targetRepeatCount = if (reminder.speechRepeatCount <= 0) 1 else reminder.speechRepeatCount
+            Log.d(TAG, "Configured speech: targetRepeatCount=$targetRepeatCount, showOverLockScreen=${reminder.showOverLockScreen}")
+
             // 1. Post Foreground Notification immediately
             val notification = buildAlarmNotification(reminder)
             try {
@@ -109,13 +120,19 @@ class NativeSpeechService : Service(), TextToSpeech.OnInitListener {
             }
 
             // 2. Set safety timeout so service never runs indefinitely
+            // Scales with repeat count (up to 5 minutes maximum for continuous/high repeats)
             safetyTimeoutRunnable?.let { mainHandler.removeCallbacks(it) }
+            val totalTimeoutMillis = if (targetRepeatCount > 1) {
+                (targetRepeatCount * 25000L + 20000L).coerceAtMost(300000L)
+            } else {
+                BASE_TIMEOUT_MILLIS
+            }
             val timeout = Runnable {
-                Log.w(TAG, "Safety timeout reached ($TIMEOUT_MILLIS ms). Shutting down.")
+                Log.w(TAG, "Safety timeout reached ($totalTimeoutMillis ms). Shutting down.")
                 cleanupAndStop()
             }
             safetyTimeoutRunnable = timeout
-            mainHandler.postDelayed(timeout, TIMEOUT_MILLIS)
+            mainHandler.postDelayed(timeout, totalTimeoutMillis)
 
             // 3. Request Audio Focus
             requestAlarmAudioFocus()
@@ -193,7 +210,7 @@ class NativeSpeechService : Service(), TextToSpeech.OnInitListener {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        return NotificationCompat.Builder(this, CHANNEL_ID)
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("⏰ " + reminder.title)
             .setContentText(reminder.spokenMessage)
@@ -203,11 +220,16 @@ class NativeSpeechService : Service(), TextToSpeech.OnInitListener {
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setOngoing(true)
             .setAutoCancel(false)
-            .setFullScreenIntent(fullScreenPendingIntent, true)
             .setContentIntent(fullScreenPendingIntent)
             .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Stop", stopPendingIntent)
             .addAction(android.R.drawable.ic_popup_reminder, "Snooze (10m)", snoozePendingIntent)
-            .build()
+
+        // Only launch the full-screen activity over the lock screen if user preference permits it
+        if (reminder.showOverLockScreen) {
+            builder.setFullScreenIntent(fullScreenPendingIntent, true)
+        }
+
+        return builder.build()
     }
 
     private fun requestAlarmAudioFocus() {
@@ -332,17 +354,32 @@ class NativeSpeechService : Service(), TextToSpeech.OnInitListener {
                 )
             }
 
-            // Set UtteranceProgressListener to detect speech completion
-            val utteranceId = "taskly_utterance_${reminder.id}"
+            // Set UtteranceProgressListener to detect speech completion and handle repetitions
+            val utteranceId = "taskly_utterance_${reminder.id}_${currentRepeatIndex}"
             speech.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
                 override fun onStart(id: String?) {
-                    Log.i(TAG, "Native speech playback started for $id: \"${reminder.spokenMessage}\"")
+                    Log.i(TAG, "Native speech playback started (pass ${currentRepeatIndex + 1} of $targetRepeatCount): \"${reminder.spokenMessage}\"")
                 }
 
                 override fun onDone(id: String?) {
-                    Log.i(TAG, "Native speech playback completed for $id")
+                    Log.i(TAG, "Native speech playback completed for $id (pass ${currentRepeatIndex + 1} of $targetRepeatCount)")
                     mainHandler.post {
-                        cleanupAndStop()
+                        if (isStopped) return@post
+
+                        currentRepeatIndex++
+                        if (currentRepeatIndex < targetRepeatCount) {
+                            Log.d(TAG, "Scheduling speech repeat ${currentRepeatIndex + 1} of $targetRepeatCount in 2500ms...")
+                            val nextRepeat = Runnable {
+                                if (!isStopped) {
+                                    speakPendingReminder()
+                                }
+                            }
+                            repeatRunnable = nextRepeat
+                            mainHandler.postDelayed(nextRepeat, 2500L)
+                        } else {
+                            Log.i(TAG, "All $targetRepeatCount speech repetitions complete. Shutting down.")
+                            cleanupAndStop()
+                        }
                     }
                 }
 
@@ -368,7 +405,7 @@ class NativeSpeechService : Service(), TextToSpeech.OnInitListener {
                 putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f)
             }
 
-            Log.i(TAG, "Speaking reminder aloud: \"${reminder.spokenMessage}\"")
+            Log.i(TAG, "Speaking reminder aloud (pass ${currentRepeatIndex + 1}/$targetRepeatCount): \"${reminder.spokenMessage}\"")
             speech.speak(reminder.spokenMessage, TextToSpeech.QUEUE_FLUSH, params, utteranceId)
 
         } catch (e: Exception) {
@@ -379,6 +416,12 @@ class NativeSpeechService : Service(), TextToSpeech.OnInitListener {
 
     private fun cleanupAndStop() {
         Log.d(TAG, "cleanupAndStop called")
+        isStopped = true
+
+        repeatRunnable?.let {
+            mainHandler.removeCallbacks(it)
+            repeatRunnable = null
+        }
 
         safetyTimeoutRunnable?.let {
             mainHandler.removeCallbacks(it)

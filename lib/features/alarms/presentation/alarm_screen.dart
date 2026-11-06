@@ -104,6 +104,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     await _ttsService.stop();
     await ref.read(alarmServiceProvider).stopNativeSpeech();
     await _logAction('stopped');
+    await ref.read(alarmServiceProvider).dismissAlarmActivity();
     if (mounted) {
       Navigator.of(context).maybePop();
     }
@@ -122,6 +123,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
       voicePersonality: widget.voicePersonality,
     );
     await _logAction('snoozed');
+    await alarmService.dismissAlarmActivity();
 
     if (mounted) {
       ScaffoldMessenger.of(
@@ -136,6 +138,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     await _ttsService.stop();
     await ref.read(alarmServiceProvider).stopNativeSpeech();
     await _logAction('completed');
+    await ref.read(alarmServiceProvider).dismissAlarmActivity();
 
     final reminderRepo = ref.read(remindersRepositoryProvider);
     final reminder = await reminderRepo.getReminderById(widget.reminderId);

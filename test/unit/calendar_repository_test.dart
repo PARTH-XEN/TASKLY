@@ -17,6 +17,8 @@ class MockAlarmService implements AlarmService {
     String voicePersonality = 'nova',
     double speechRate = 1.0,
     double speechPitch = 1.0,
+    int speechRepeatCount = 1,
+    bool showOverLockScreen = true,
   }) async {
     scheduledAlarms.add(id);
     return true;
